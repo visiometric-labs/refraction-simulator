@@ -1,178 +1,246 @@
-# 🔬 Ocularis — Experiencia Educativa Óptica
+# 👁️ Refraction Simulator
 
-Herramienta visual interactiva diseñada para la consulta optométrica presencial. Permite al profesional de la salud visual explicar al paciente, de forma clara y cinematográfica, cómo funcionan condiciones como la **miopía**, la **hipermetropía**, el **astigmatismo** y la **presbicia (vista cansada)**, y cómo actúan las lentes correctoras (divergentes, convergentes, tóricas y progresivas).
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-Proprietary-blue.svg)]()
+[![JavaScript](https://img.shields.io/badge/Language-Vanilla%20JS%20(ES6+)-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+[![Vite](https://img.shields.io/badge/Bundler-Vite%206-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
+[![Organization](https://img.shields.io/badge/Org-visiometric--labs-00f2fe)](https://github.com/visiometric-labs)
 
-> **No es una herramienta de diagnóstico.** Ocularis ilustra principios ópticos con fines pedagógicos.
+[**English**](#-english-version) | [**Español**](#-versión-en-español)
 
 ---
 
-## 🏗️ Resumen Técnico
+## 🌐 English Version
 
-### Stack Tecnológico
+Interactive visual simulator designed for in-person optometric consultations. It enables eye care professionals to clearly demonstrate to patients how refractive anomalies (**myopia**, **hyperopia**, **astigmatism**, and **presbyopia**) affect visual focus, and how ophthalmic lenses (divergent, convergent, toric, and progressive) restore sharp retinal convergence.
 
-| Capa | Tecnología | Justificación |
+> **Disclaimer:** This software is an educational visualization and communication tool for clinical consultations. It is not intended for diagnostic purposes.
+
+### 🌟 Key Features
+
+1. **Dual Split-Screen Perception Simulator:**
+   - Interactive Before/After split comparator with draggable dividing bar.
+   - Real-time simulation of patient visual perception vs. optical correction using a clinical Snellen optotype chart and high-contrast night street lights (bokeh circles and astigmatic ghosting).
+
+2. **Accurate 2D Photonic Ray Tracing (60 FPS):**
+   - High-fidelity light ray convergence across the cornea, anterior chamber, crystalline lens, and vitreous humor onto the fovea.
+   - Dynamic simulation of focal planes: pre-retinal focus (myopia), virtual post-retinal focus (hyperopia and presbyopia), and interval of Sturm / multiple focal planes (astigmatism).
+
+3. **Dynamic Corrective Lenses:**
+   - **Divergent Lenses (—):** Concave geometry with thick edges and thin optical center for myopia correction.
+   - **Convergent Lenses (+):** Convex geometry with central bulge for hyperopia correction.
+   - **Cylindrical / Toric Lenses:** Asymmetric meridian profile to correct corneal astigmatism.
+   - **Progressive Lenses (Multifocal):** Variable addition channel for presbyopia, restoring reading acuity while preserving distance vision.
+
+4. **11-Stage Guided Pedagogical Workflow:**
+   1. *Macro-Eye Hero:* Photorealistic stylized eye with reactive pupil and biometric iris.
+   2. *Sagittal Anatomy Explorer:* Interactive exploration of cornea, anterior chamber, crystalline lens, vitreous humor, and retina.
+   3. *Myopia Physics:* Axial elongation and divergent lens correction.
+   4. *Myopia Perception Simulation:* Split-screen distant blur demo.
+   5. *Hyperopia Physics:* Axial shortening and convergent lens correction.
+   6. *Hyperopia Perception Simulation:* Split-screen near-vision blur demo.
+   7. *Astigmatism Physics:* Corneal asymmetry and cylindrical lens correction.
+   8. *Astigmatism Perception Simulation:* Split-screen directional ghosting demo.
+   9. *Presbyopia Physics:* Lens rigidity, distance/near focus, and progressive addition.
+   10. *Presbyopia Perception Simulation:* Split-screen reading blur demo.
+   11. *Clinical Synthesis:* Summary and consultation wrap-up.
+
+5. **Tablet & Clinical Desktop Optimization (≥768px):**
+   - **Mobile Gate:** Informs smartphone users to open the app on an iPad, tablet, or desktop.
+   - **Tablet Mode (768px - 1024px):** Scaled typography and a dedicated button to **hide/restore** the explanatory card for unobstructed view of the eyeball.
+   - **Native Fullscreen:** Triggered via user gesture for clinical immersion.
+
+---
+
+### 🛠️ Technical Stack
+
+| Layer | Technology | Details |
 |---|---|---|
-| **Bundler / Dev Server** | Vite 6 | HMR ultrarrápido, build optimizado, zero-config |
-| **Lenguaje** | Vanilla JavaScript (ES Modules) | Sin frameworks pesados, máximo rendimiento a 60 FPS |
-| **Motor de Óptica** | HTML5 Canvas 2D | Trazado de rayos en tiempo real, partículas de refracción, efectos de glow |
-| **Anatomía del Ojo** | SVG interactivo | Nitidez vectorial en pantallas 4K/Retina, hotspots interactivos |
-| **Estilos** | CSS modular (Vanilla) | Design system médico premium con glassmorphism y modo oscuro |
-| **Servidor de Producción** | Nginx Alpine | Imagen Docker de ~25 MB, compresión gzip, caché de assets |
-| **Contenedorización** | Docker multi-stage | Build reproducible, despliegue inmediato en cualquier nube |
-
-### Arquitectura de la Aplicación
-
-```
-SPA de lienzo único (sin recarga ni rutas URL externas)
-│
-├── Máquina de Estados (state-machine.js) — 11 Etapas pedagógicas:
-│   1. Macro-Ojo General (Vista frontal hero con hotspot interactivo)
-│   2. Corte Sagital Anatómico (Córnea, cristalino, iris, retina, fóvea, nervio óptico)
-│   3. Física de la Miopía (Elongación axial + lente divergente)
-│   4. Simulación de Visión Miópica (Split-Screen interactivo con bokeh lejano)
-│   5. Física de la Hipermetropía (Acortamiento axial + lente convergente)
-│   6. Simulación de Visión Hipermétrope (Split-Screen con desenfoque de cerca)
-│   7. Física del Astigmatismo (Asimetría corneal + lente cilíndrica/tórica)
-│   8. Simulación de Visión Astigmática (Split-Screen con sombras fantasma)
-│   9. Física de la Presbicia (Cristalino rígido + lente progresiva/adición)
-│   10. Simulación de Visión con Presbicia (Split-Screen con lectura borrosa)
-│   11. Síntesis Clínica y Conclusión (Repaso de condiciones y reinicio)
-│
-├── Motor de Simulación Óptica (simulation/)
-│   Trazado fotónico de rayos en tiempo real a 60 FPS, cálculo de refracción esférica y cilíndrica,
-│   comportamiento dinámico de lentes divergentes, convergentes, tóricas y progresivas (multifocales).
-│
-├── Componentes Visuales (components/)
-│   Macro-ojo interactivo, explorador anatómico sagital, simulador Split-Screen de percepción,
-│   dock de refracción con controles compactos, y HUD de control para el optometrista.
-│
-└── Core (core/)
-    Bus de eventos reactivo, máquina de estados finitos, detección de dispositivos y gestión de Fullscreen.
-```
-
-### Características de Plataforma y Responsive
-
-- **Pantalla mínima admitida:** 768px de ancho (tablets y computadores).
-- **Móviles bloqueados (Mobile Gate):** Los smartphones muestran una pantalla informativa indicando que la experiencia clínica requiere pantalla grande (≥768px).
-- **Modo Tableta Optimizado (768px - 1024px):**
-  - Tipografías escaladas y proporcionales para evitar saturación visual.
-  - Cuadro de conceptos compacto con margen despejado frente al ojo.
-  - **Botón exclusivo para Ocultar / Mostrar la explicación:** Permite al optometrista esconder el cuadro de textos para una visualización 100% limpia del globo ocular y reabrirlo con un solo toque mediante un botón flotante minimalista.
-- **Pantalla Completa Nativa:** Activada al iniciar la experiencia mediante un gesto interactivo seguro del usuario.
-
-### Compatibilidad de Navegadores
-
-- Chrome/Edge 90+
-- Safari 15+ (macOS / iPadOS)
-- Firefox 90+
+| **Bundler / Dev Server** | Vite 6 | Instant HMR, zero-config production bundle |
+| **Logic / Core** | Vanilla JavaScript (ES Modules) | High-performance 60 FPS loop without heavy framework overhead |
+| **Optics Rendering Engine** | HTML5 Canvas 2D | Ray tracing, bioluminescent glow, laser sweeps, and particles |
+| **Anatomy Layer** | Synchronized HTML5 / SVG Pins | High-DPI Retina/4K responsive coordinates |
+| **Styling** | Modular Vanilla CSS | Dark medical design system with glassmorphism |
+| **Production Server** | Nginx Alpine | Multi-stage image (~25 MB), gzip compression, immutable cache |
+| **Containerization** | Docker & Docker Compose | 1-command reproducible deployment |
 
 ---
 
-## 🚀 Cómo Ejecutar el Proyecto
+### 🚀 Getting Started
 
-### Opción 1: Desarrollo Local (con Node.js)
+#### Option 1: Docker (Recommended)
+
+**Prerequisites:** Docker and Docker Compose installed.
+
+```bash
+# Build and run container in background
+docker compose up -d --build
+
+# Open in browser:
+http://localhost:8080/
+
+# View logs:
+docker compose logs -f
+
+# Stop container:
+docker compose down
+```
+
+#### Option 2: Local Development (Node.js)
+
+**Prerequisites:** Node.js 18+ and npm.
+
+```bash
+# Install dependencies
+npm install
+
+# Start Vite dev server
+npm run dev
+
+# Open in browser:
+http://localhost:5173/
+```
+
+---
+
+### 📁 Project Structure
+
+```
+├── Dockerfile                      # Multi-stage production build (Node + Nginx)
+├── docker-compose.yml              # Single-command container orchestration
+├── nginx.conf                      # Production HTTP server config (gzip, security headers)
+├── index.html                      # Main HTML structure & HUD overlays
+├── package.json                    # Project metadata & scripts
+├── vite.config.js                  # Vite configuration
+│
+└── src/
+    ├── main.js                     # Application orchestrator & scene switcher
+    ├── core/
+    │   ├── device-guard.js         # Mobile gate detection & Fullscreen API
+    │   ├── events.js               # Pub/sub event bus
+    │   └── state-machine.js        # 11-stage finite state machine
+    ├── engine/
+    │   └── optical-engine.js       # 60 FPS Canvas engine, transitions & particles
+    ├── simulation/
+    │   ├── eye-model.js            # Anatomical & geometric eye coordinates
+    │   └── lenses.js               # Mathematical lens curvature & deflection
+    ├── components/
+    │   ├── macro-eye.js            # Stage 1: Frontal hero eye
+    │   ├── anatomy-explorer.js     # Stage 2: Sagittal cross-section explorer
+    │   ├── refraction-scene.js     # Stages 3, 5, 7, 9: Ray tracing & controls
+    │   ├── perception-simulator.js # Stages 4, 6, 8, 10: Split-screen comparator
+    │   ├── synthesis-scene.js      # Stage 11: Clinical wrap-up
+    │   └── hud.js                  # Fixed timeline & navigation HUD
+    └── styles/
+        └── index.css               # Medical dark design system & responsive rules
+```
+
+---
+
+## 🇪🇸 Versión en Español
+
+Simulador óptico interactivo diseñado para la consulta optométrica presencial. Permite al profesional de la salud visual explicar al paciente, de forma clara y cinematográfica, cómo funcionan afecciones como la **miopía**, la **hipermetropía**, el **astigmatismo** y la **presbicia (vista cansada)**, y cómo actúan las lentes correctoras (divergentes, convergentes, tóricas y progresivas).
+
+> **Aviso:** Esta aplicación es una herramienta pedagógica de comunicación clínica. No está destinada al diagnóstico médico.
+
+### 🌟 Características Principales
+
+1. **Simulador de Percepción con Comparador Split-Screen:**
+   - Comparador Antes / Después con divisor deslizable interactivo.
+   - Simulación en tiempo real de la visión del paciente frente a la visión corregida mediante un optotipo Snellen retroiluminado y farolas nocturnas de alto contraste (bokeh y aberración astigmática).
+
+2. **Trazado de Rayos Fotónicos a 60 FPS:**
+   - Convergencia precisa de rayos de luz atravesando córnea, cámara anterior, cristalino y vítreo hasta la fóvea.
+   - Simulación de focos pre-retinianos (miopía), focos virtuales post-retinianos (hipermetropía y presbicia) y meridianos perpendiculares con dos focos (astigmatismo).
+
+3. **Lentes Correctoras Dinámicas:**
+   - **Lente Divergente (—):** Geometría cóncava con bordes gruesos y centro delgado para miopía.
+   - **Lente Convergente (+):** Geometría convexa con abombamiento central para hipermetropía.
+   - **Lente Cilíndrica / Tórica:** Perfil meridional asimétrico para compensar el astigmatismo corneal.
+   - **Lente Progresiva (Multifocal):** Pasillo de adición variable para presbicia que devuelve nitidez en lectura cercana preservando la visión de lejos.
+
+4. **Recorrido Clínico de 11 Etapas:**
+   1. *Macro-Ojo General:* Vista frontal con pupila reactiva e iris biofotónico.
+   2. *Explorador Anatómico:* Píldoras interactivas sobre córnea, cristalino, vítreo y retina.
+   3. *Física de la Miopía:* Elongación axial y lente divergente.
+   4. *Simulación de Visión Miópica:* Split-screen interactivo con desenfoque lejano.
+   5. *Física de la Hipermetropía:* Acortamiento axial y lente convergente.
+   6. *Simulación de Visión Hipermétrope:* Split-screen con desenfoque de cerca y fatiga.
+   7. *Física del Astigmatismo:* Asimetría corneal y lente cilíndrica.
+   8. *Simulación de Visión Astigmática:* Split-screen con sombras dobles direccionales.
+   9. *Física de la Presbicia:* Cristalino rígido, distancia de lectura y adición progresiva.
+   10. *Simulación de Visión con Presbicia:* Split-screen con lectura borrosa.
+   11. *Síntesis y Conclusión:* Repaso pedagógico y plan correctivo.
+
+5. **Optimización para Tablets y Computadores (≥768px):**
+   - **Mobile Gate:** Notificación para smartphones indicando que se requiere tablet o computador.
+   - **Modo Tableta (768px - 1024px):** Tipografías proporcionales y botón para **ocultar / mostrar** el cuadro de conceptos, dejando el globo ocular 100% visible.
+   - **Pantalla Completa Nativa:** Activación fluida mediante gesto de inicio.
+
+---
+
+### 🛠️ Tecnologías Empleadas
+
+| Componente | Tecnología | Justificación |
+|---|---|---|
+| **Bundler / Servidor Dev** | Vite 6 | Recarga HMR instantánea y compilación optimizada |
+| **Lógica** | Vanilla JavaScript (ES Modules) | 60 FPS garantizados sin dependencias de frameworks |
+| **Motor de Renderizado** | HTML5 Canvas 2D | Trazado de rayos, partículas en suspensión y efectos bioluminiscentes |
+| **Pines Anatómicos** | HTML5 / SVG reactivo | Coordinación de coordenadas en pantallas Retina/4K |
+| **Estilos** | CSS Vanilla Modular | Design system médico oscuro con glassmorphism |
+| **Servidor de Producción** | Nginx Alpine | Imagen ligera de ~25 MB con gzip y caché inmutable |
+| **Contenedor** | Docker & Docker Compose | Despliegue idéntico en cualquier entorno |
+
+---
+
+### 🚀 Instrucciones de Ejecución
+
+#### Opción 1: Docker (Recomendada)
+
+**Requisitos:** Docker y Docker Compose instalados.
+
+```bash
+# Construir imagen y levantar contenedor en segundo plano:
+docker compose up -d --build
+
+# Acceder en el navegador:
+http://localhost:8080/
+
+# Ver registros de actividad:
+docker compose logs -f
+
+# Detener el contenedor:
+docker compose down
+```
+
+#### Opción 2: Desarrollo Local (Node.js)
 
 **Requisitos:** Node.js 18+ y npm.
 
 ```bash
-# Clonar el repositorio
-git clone <url-del-repositorio>
-cd proyecto-experiencia-optica
-
 # Instalar dependencias
 npm install
 
-# Iniciar servidor de desarrollo (con hot-reload)
+# Iniciar servidor Vite
 npm run dev
-```
 
-La app estará disponible en `http://localhost:5173`.
-
----
-
-### Opción 2: Docker (Desarrollo y Producción)
-
-**Requisitos:** Docker y Docker Compose instalados.
-
-#### Levantar con Docker Compose (recomendado)
-
-```bash
-# Construir la imagen y levantar el contenedor
-docker compose up --build
-
-# En segundo plano:
-docker compose up --build -d
-```
-
-La app estará disponible en `http://localhost:8080`.
-
-#### Construir y ejecutar manualmente
-
-```bash
-# Construir la imagen
-docker build -t ocularis .
-
-# Ejecutar el contenedor
-docker run -p 8080:80 ocularis
-```
-
-#### Detener el contenedor
-
-```bash
-# Si usaste docker compose:
-docker compose down
-
-# Si usaste docker run, buscar el ID y detener:
-docker ps
-docker stop <container-id>
+# Acceder en el navegador:
+http://localhost:5173/
 ```
 
 ---
 
-### Opción 3: Despliegue en la Nube
+### 🌐 Ecosistema Visiometric Labs
 
-La imagen Docker generada es compatible con cualquier servicio de contenedores:
-
-| Plataforma | Servicio Recomendado |
-|---|---|
-| **AWS** | App Runner, ECS Fargate, o Lightsail Containers |
-| **Google Cloud** | Cloud Run |
-| **Azure** | Container Apps |
-| **Otros** | Render, Railway, DigitalOcean App Platform |
-
-```bash
-# Ejemplo: push a Amazon ECR
-aws ecr get-login-password | docker login --username AWS --password-stdin <account>.dkr.ecr.<region>.amazonaws.com
-docker tag ocularis:latest <account>.dkr.ecr.<region>.amazonaws.com/ocularis:latest
-docker push <account>.dkr.ecr.<region>.amazonaws.com/ocularis:latest
-```
+Este simulador forma parte de la suite modular de simulación óptica de **Visiometric Labs**:
+- **`refraction-simulator`**: Anomalías refractivas y corrección con lentes (Miopía, Hipermetropía, Astigmatismo, Presbicia).
+- **`optical-filters-simulator`**: Filtros y tratamientos de luz (Antirreflejante, Filtro Azul, Fotocromático, Polarizado).
+- **`eye-pathologies-simulator`**: Patologías oculares (Cataratas, Glaucoma, Degeneración Macular).
+- **`lens-types-simulator`**: Tipos y geometrías de lentes oftálmicas.
+- **`smart-optical-platform`**: Plataforma unificada de configuración visual en diferentes entornos.
 
 ---
 
-## 📁 Estructura del Proyecto
+## 📄 License
 
-```
-├── index.html                      # Entrada HTML principal
-├── package.json                    # Dependencias y scripts
-├── vite.config.js                  # Configuración de Vite
-├── Dockerfile                      # Build multi-stage (Node + Nginx)
-├── docker-compose.yml              # Orquestación local con un comando
-├── nginx.conf                      # Configuración de producción (gzip, caché, SPA)
-├── .dockerignore                   # Exclusiones para builds rápidos
-│
-├── public/                         # Assets estáticos
-│   └── assets/images/              # Imágenes del simulador de percepción
-│
-└── src/
-    ├── main.js                     # Punto de entrada y orquestador
-    ├── styles/                     # Design system CSS modular
-    ├── core/                       # Máquina de estados, eventos, device guard
-    ├── components/                 # UI: ojo, anatomía, HUD, simulador, mobile gate
-    └── simulation/                 # Motor de óptica: ray tracer, lentes, condiciones
-```
-
----
-
-## 📄 Licencia
-
-Proyecto privado. Todos los derechos reservados.
+Proprietary software. All rights reserved © Visiometric Labs.

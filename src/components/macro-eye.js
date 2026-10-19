@@ -1,9 +1,9 @@
 import { stateMachine, States } from '../core/state-machine.js';
 
 /**
- * Escena del Macro-Ojo frontal (Etapa 1: Bienvenida e Impacto Visual).
- * Presenta un ojo hiperestilizado cinematográfico con iris biofotónico,
- * pupila reactiva con respiración sutil y botón discreto encima del ojo.
+ * Hero Macro-Eye Scene (Stage 1: Welcome & Visual Impact).
+ * Features a cinematic stylized eye with biophotonic iris,
+ * reactive pupil with subtle breathing, and discreet entry trigger.
  */
 export class MacroEyeScene {
   constructor() {
@@ -20,7 +20,7 @@ export class MacroEyeScene {
     this.hotspotEl = document.getElementById('eye-macro-hotspot');
     if (this.hotspotEl) {
       this.hotspotEl.style.display = 'block';
-      // Forzar reflow para que la animación de entrada funcione
+      // Force reflow to ensure entry animation triggers
       void this.hotspotEl.offsetWidth;
       this.hotspotEl.classList.remove('hidden');
     }
@@ -43,7 +43,7 @@ export class MacroEyeScene {
   }
 
   onResize(width, height) {
-    // Reajuste de coordenadas
+    // Coordinate adjustment on resize
   }
 
   onMouseMove(x, y) {
@@ -52,7 +52,7 @@ export class MacroEyeScene {
   }
 
   onMouseDown(x, y) {
-    // Al tocar o hacer clic sobre la zona del iris, entra automáticamente a la anatomía
+    // Clicking or tapping on the iris area transitions directly to anatomy
     const cx = window.innerWidth * 0.5;
     const cy = window.innerHeight * 0.5;
     const dist = Math.hypot(x - cx, y - cy);
@@ -64,11 +64,11 @@ export class MacroEyeScene {
   update(dt) {
     this.time += dt;
 
-    // Inercia suave del puntero para efecto parallax
+    // Smooth pointer inertia for parallax effect
     this.mouse.x += (this.mouse.targetX - this.mouse.x) * Math.min(1, dt * 5);
     this.mouse.y += (this.mouse.targetY - this.mouse.y) * Math.min(1, dt * 5);
 
-    // Respiración fisiológica sutil de la pupila
+    // Subtle physiological pupil breathing
     const breathing = Math.sin(this.time * 1.5) * 2.5;
     this.pupilRadius = this.targetPupilRadius + breathing;
   }
@@ -79,13 +79,13 @@ export class MacroEyeScene {
     const scale = Math.min(width / 1280, height / 800);
     const s = Math.max(0.75, Math.min(scale, 1.2));
 
-    // Desplazamiento parallax de la mirada
+    // Parallax gaze offset
     const lookOffsetX = ((this.mouse.x - cx) / width) * 26 * s;
     const lookOffsetY = ((this.mouse.y - cy) / height) * 20 * s;
 
     ctx.save();
 
-    // 1. Halo atmosférico posterior del ojo
+    // 1. Posterior atmospheric eye halo
     const haloGrad = ctx.createRadialGradient(cx, cy, 60 * s, cx, cy, 320 * s);
     haloGrad.addColorStop(0, 'rgba(0, 242, 254, 0.18)');
     haloGrad.addColorStop(0.4, 'rgba(2, 132, 199, 0.08)');
@@ -93,7 +93,7 @@ export class MacroEyeScene {
     ctx.fillStyle = haloGrad;
     ctx.fillRect(cx - 350 * s, cy - 350 * s, 700 * s, 700 * s);
 
-    // 2. Esclera elíptica estilizada (Apertura palpebral / Forma de ojo)
+    // 2. Stylized elliptical sclera (Palpebral aperture / Eye shape)
     const eyeWidth = 340 * s;
     const eyeHeight = 160 * s;
 
@@ -111,7 +111,7 @@ export class MacroEyeScene {
     );
     ctx.closePath();
 
-    // Relleno de esclera con profundidad
+    // Sclera fill with depth
     const scleraGrad = ctx.createRadialGradient(
       cx, cy, 30 * s,
       cx, cy, eyeWidth
@@ -122,7 +122,7 @@ export class MacroEyeScene {
     ctx.fillStyle = scleraGrad;
     ctx.fill();
 
-    // Borde de la apertura palpebral con glow fino
+    // Palpebral aperture rim with fine glow
     ctx.lineWidth = 2.5 * s;
     ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
     ctx.shadowColor = '#00f2fe';
@@ -130,15 +130,15 @@ export class MacroEyeScene {
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // Recortar dibujo al interior de los párpados
+    // Clip drawing to eyelid interior
     ctx.clip();
 
-    // 3. Iris (Círculo biométrico bioluminiscente con fibras)
+    // 3. Iris (Biometric bioluminescent circle with fibers)
     const irisX = cx + lookOffsetX;
     const irisY = cy + lookOffsetY;
     const irisRadius = 100 * s;
 
-    // Fondo del iris
+    // Iris background
     const irisGrad = ctx.createRadialGradient(
       irisX, irisY, this.pupilRadius * s,
       irisX, irisY, irisRadius
@@ -153,7 +153,7 @@ export class MacroEyeScene {
     ctx.fillStyle = irisGrad;
     ctx.fill();
 
-    // Fibras estromales radiales del iris (detalles microscópicos)
+    // Radial stromal iris fibers (microscopic details)
     const fibersCount = 64;
     ctx.save();
     ctx.translate(irisX, irisY);
@@ -172,20 +172,20 @@ export class MacroEyeScene {
     }
     ctx.restore();
 
-    // Anillo exterior de la córnea/limbo
+    // Outer corneal / limbus ring
     ctx.beginPath();
     ctx.arc(irisX, irisY, irisRadius, 0, Math.PI * 2);
     ctx.lineWidth = 3 * s;
     ctx.strokeStyle = 'rgba(0, 242, 254, 0.7)';
     ctx.stroke();
 
-    // 4. Pupila negra profunda con gradiente
+    // 4. Deep black pupil with gradient
     ctx.beginPath();
     ctx.arc(irisX, irisY, this.pupilRadius * s, 0, Math.PI * 2);
     ctx.fillStyle = '#010309';
     ctx.fill();
 
-    // 5. Destellos y reflejos especulares de luz (Corneal light reflection)
+    // 5. Specular highlights and glints (Corneal light reflection)
     const refl1X = irisX - irisRadius * 0.35;
     const refl1Y = irisY - irisRadius * 0.35;
     ctx.beginPath();

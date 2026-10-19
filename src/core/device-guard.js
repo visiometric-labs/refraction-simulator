@@ -1,10 +1,10 @@
 /**
- * Detección de dispositivos (Mobile Gate) y wrappers de Fullscreen API.
+ * Device detection (Mobile Gate) and Fullscreen API wrappers.
  */
 
 /**
- * Retorna true si el dispositivo actual es un smartphone/móvil
- * (ancho de pantalla < 768px o userAgent móvil).
+ * Returns true if current device is a smartphone/mobile
+ * (screen width < 768px or mobile userAgent).
  */
 export function isMobileDevice() {
   if (typeof window === 'undefined') return false;
@@ -14,7 +14,7 @@ export function isMobileDevice() {
   const isMobileUA = /android|iphone|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
   const isTabletUA = /ipad|tablet|playbook|silk/i.test(userAgent) || (navigator.maxTouchPoints > 1 && window.innerWidth >= 768);
 
-  // Si es tablet con pantalla amplia, está permitido
+  // If tablet with large screen, allowed
   if (isTabletUA && window.innerWidth >= 768) {
     return false;
   }
@@ -23,8 +23,8 @@ export function isMobileDevice() {
 }
 
 /**
- * Solicita entrar en pantalla completa de forma cross-browser.
- * Debe ser invocado dentro de un evento de usuario (click/tap).
+ * Requests cross-browser fullscreen mode.
+ * Must be invoked inside a user gesture event (click/tap).
  */
 export async function requestFullscreen() {
   const docEl = document.documentElement;
@@ -37,12 +37,12 @@ export async function requestFullscreen() {
       await docEl.msRequestFullscreen();
     }
   } catch (err) {
-    console.warn('[DeviceGuard] No se pudo activar pantalla completa:', err);
+    console.warn('[DeviceGuard] Could not activate fullscreen:', err);
   }
 }
 
 /**
- * Sale de la pantalla completa.
+ * Exits fullscreen mode.
  */
 export async function exitFullscreen() {
   try {
@@ -54,12 +54,12 @@ export async function exitFullscreen() {
       await document.msExitFullscreen();
     }
   } catch (err) {
-    console.warn('[DeviceGuard] Error al salir de pantalla completa:', err);
+    console.warn('[DeviceGuard] Error exiting fullscreen:', err);
   }
 }
 
 /**
- * Retorna true si actualmente está en pantalla completa.
+ * Returns true if fullscreen is currently active.
  */
 export function isFullscreenActive() {
   return !!(
@@ -71,7 +71,7 @@ export function isFullscreenActive() {
 }
 
 /**
- * Alterna entre entrar y salir de pantalla completa.
+ * Toggles fullscreen mode between active and inactive.
  */
 export async function toggleFullscreen() {
   if (isFullscreenActive()) {

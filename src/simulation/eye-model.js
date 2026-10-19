@@ -1,31 +1,31 @@
 /**
- * Modelo geométrico y óptico simplificado del ojo humano para refracción 2D pedagógica.
+ * Simplified 2D geometric and optical model of the human eye for educational refraction.
  */
 
 export class EyeGeometry {
   constructor() {
-    // Parámetros base anatómicos
+    // Anatomical base parameters
     this.centerX = 0;
     this.centerY = 0;
     this.scale = 1;
 
-    // Dimensiones en px relativos
+    // Relative px dimensions
     this.corneaRadius = 80;
     this.corneaThickness = 12;
     this.lensRadiusX = 22;
     this.lensRadiusY = 65;
-    this.axialLength = 340; // Distancia desde vértice corneal a fóvea
-    this.eyeRadiusY = 130;  // Radio vertical del globo ocular
+    this.axialLength = 340; // Distance from corneal apex to fovea
+    this.eyeRadiusY = 130;  // Eyeball vertical radius
     
-    // Parámetros refractivos
-    this.axialElongation = 0; // px adicionales para simular miopía (0 = emétrope)
+    // Refractive parameters
+    this.axialElongation = 0; // Additional px to simulate myopia (0 = emmetrope)
     this.corneaPowerFactor = 1.0;
     this.lensPowerFactor = 1.0;
-    this.astigmatismMeridianOffset = 0; // diferencia de potencia entre meridianos
+    this.astigmatismMeridianOffset = 0; // Power difference between meridians
   }
 
   /**
-   * Actualiza las dimensiones y centro del ojo según el tamaño del viewport.
+   * Updates eye dimensions and center according to viewport size.
    * @param {number} width 
    * @param {number} height 
    */
@@ -33,13 +33,13 @@ export class EyeGeometry {
     this.scale = Math.min(width / 1360, height / 820);
     this.scale = Math.max(0.65, Math.min(this.scale, 1.15));
 
-    // Centrado hacia la derecha para garantizar separación total con la tarjeta explicativa izquierda
+    // Centered towards the right to ensure full separation from left concept card
     this.centerX = Math.max(width * 0.58, 470 * this.scale);
     this.centerY = height * 0.49;
   }
 
   /**
-   * Posición del vértice anterior de la córnea
+   * Position of the anterior corneal apex
    */
   get corneaApex() {
     return {
@@ -49,7 +49,7 @@ export class EyeGeometry {
   }
 
   /**
-   * Centro del cristalino
+   * Center of the crystalline lens
    */
   get lensCenter() {
     return {
@@ -59,7 +59,7 @@ export class EyeGeometry {
   }
 
   /**
-   * Posición de la fóvea / retina central
+   * Position of fovea / central retina
    */
   get retinaApex() {
     const totalLength = (this.axialLength + this.axialElongation) * this.scale;
@@ -70,7 +70,7 @@ export class EyeGeometry {
   }
 
   /**
-   * Dibuja el corte sagital completo del ojo con gradientes y estilo médico premium
+   * Draws complete sagittal cross-section with gradients and premium medical style
    * @param {CanvasRenderingContext2D} ctx 
    * @param {object} options
    */
@@ -83,7 +83,7 @@ export class EyeGeometry {
 
     ctx.save();
 
-    // 1. Esclera & Pared posterior (Globo ocular)
+    // 1. Sclera & Posterior wall (Eyeball)
     ctx.beginPath();
     ctx.moveTo(cApex.x + 30 * s, this.centerY - eyeR_Y * 0.85);
     ctx.bezierCurveTo(
@@ -97,7 +97,7 @@ export class EyeGeometry {
       cApex.x + 30 * s, this.centerY + eyeR_Y * 0.85
     );
 
-    // Relleno de humor vítreo con gradiente bioluminiscente sutil
+    // Vitreous humor fill with subtle bioluminescent gradient
     const vitreousGrad = ctx.createRadialGradient(
       this.centerX + 20 * s, this.centerY, 20 * s,
       this.centerX + 40 * s, this.centerY, eyeR_Y * 1.2
@@ -108,12 +108,12 @@ export class EyeGeometry {
     ctx.fillStyle = vitreousGrad;
     ctx.fill();
 
-    // Trazo de esclera exterior
+    // Outer sclera stroke
     ctx.lineWidth = 4 * s;
     ctx.strokeStyle = 'rgba(56, 189, 248, 0.35)';
     ctx.stroke();
 
-    // 2. Capa de Retina (Borde sensor posterior con glow ambar/esmeralda)
+    // 2. Retina layer (Posterior sensory boundary with amber/emerald glow)
     ctx.beginPath();
     ctx.arc(rApex.x - 120 * s, this.centerY, 125 * s, -Math.PI * 0.38, Math.PI * 0.38);
     ctx.lineWidth = 3 * s;
@@ -123,13 +123,13 @@ export class EyeGeometry {
     ctx.stroke();
     ctx.shadowBlur = 0; // reset
 
-    // Marcador Fóvea
+    // Fovea marker
     ctx.beginPath();
     ctx.arc(rApex.x, this.centerY, 4 * s, 0, Math.PI * 2);
     ctx.fillStyle = '#00f2fe';
     ctx.fill();
 
-    // 3. Córnea (Cúpula transparente anterior)
+    // 3. Cornea (Anterior transparent dome)
     ctx.beginPath();
     ctx.arc(cApex.x + 70 * s, this.centerY, 85 * s, Math.PI * 0.72, Math.PI * 1.28);
     ctx.lineWidth = 7 * s;
@@ -139,22 +139,22 @@ export class EyeGeometry {
     ctx.stroke();
     ctx.shadowBlur = 0;
 
-    // 4. Iris (Apertura pupilar superior e inferior)
+    // 4. Iris (Superior and inferior pupillary aperture)
     const pupilHalf = 32 * s;
     ctx.lineWidth = 5 * s;
     ctx.strokeStyle = '#0284c7';
-    // Iris superior
+    // Superior iris
     ctx.beginPath();
     ctx.moveTo(lCenter.x - 12 * s, this.centerY - eyeR_Y * 0.75);
     ctx.lineTo(lCenter.x - 6 * s, this.centerY - pupilHalf);
     ctx.stroke();
-    // Iris inferior
+    // Inferior iris
     ctx.beginPath();
     ctx.moveTo(lCenter.x - 12 * s, this.centerY + eyeR_Y * 0.75);
     ctx.lineTo(lCenter.x - 6 * s, this.centerY + pupilHalf);
     ctx.stroke();
 
-    // 5. Cristalino (Lente biconvexa interna)
+    // 5. Crystalline lens (Internal biconvex lens)
     ctx.beginPath();
     ctx.ellipse(
       lCenter.x,

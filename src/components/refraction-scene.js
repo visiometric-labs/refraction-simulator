@@ -3,10 +3,11 @@ import { CorrectiveLens } from '../simulation/lenses.js';
 import { stateMachine, States } from '../core/state-machine.js';
 
 /**
- * Escena de refracción óptica y trazado de rayos interactivo.
- * Soporta modo Miopía (elongación axial + lente divergente),
- * Hipermetropía (acortamiento axial + lente convergente) y
- * Astigmatismo (asimetría meridional + lente cilíndrica/tórica).
+ * Optical refraction scene with interactive ray tracing.
+ * Supports Myopia (axial elongation + divergent lens),
+ * Hyperopia (axial shortening + convergent lens),
+ * Astigmatism (meridian asymmetry + toric/cylindrical lens), and
+ * Presbyopia (loss of accommodation + progressive lens).
  */
 export class RefractionScene {
   /**
@@ -19,27 +20,27 @@ export class RefractionScene {
     this.lens = new CorrectiveLens(lensType);
     this.time = 0;
 
-    // Parámetros específicos
+    // Specific condition parameters
     if (mode === 'myopia') {
-      this.geometry.axialElongation = 55; // Ojo elongado por defecto
+      this.geometry.axialElongation = 55; // Elongated eye by default
     } else if (mode === 'hyperopia') {
-      this.geometry.axialElongation = -45; // Ojo acortado en hipermetropía
+      this.geometry.axialElongation = -45; // Shortened eye in hyperopia
     } else if (mode === 'presbyopia') {
-      this.geometry.axialElongation = 0; // Ojo emétrope base en reposo
-      this.presbyopiaDistance = 'near'; // 'near' (lectura a 40 cm) | 'far' (infinito)
-      this.addition = 2.0; // Adición en dioptrías (+1.00 D a +3.00 D)
-      this.patientAge = 52; // Años aproximados
+      this.geometry.axialElongation = 0; // Base emmetropic eye at rest
+      this.presbyopiaDistance = 'near'; // 'near' (40 cm reading) | 'far' (infinity)
+      this.addition = 2.0; // Addition in diopters (+1.00 D to +3.00 D)
+      this.patientAge = 52; // Approximate years
     } else {
       this.geometry.axialElongation = 0;
-      this.astigmatismAngle = 90; // Eje a 90 grados
-      this.meridianDifference = 35; // Diferencia focal en px
+      this.astigmatismAngle = 90; // Axis at 90 degrees
+      this.meridianDifference = 35; // Focal difference in px
     }
 
     this.updateLensParams();
   }
 
   /**
-   * Sincroniza la severidad y grosor del lente con el estado actual
+   * Synchronizes lens severity and thickness with current state
    */
   updateLensParams() {
     if (this.mode === 'myopia') {
@@ -85,7 +86,7 @@ export class RefractionScene {
     const controlsEl = document.getElementById('card-controls');
     const dockEl = document.getElementById('refraction-dock');
 
-    // 1. Cuadro de conceptos lateral: limpio, solo texto explicativo sin botoneras
+    // 1. Concept side card: clean, explanatory text without button grids
     if (controlsEl) {
       controlsEl.innerHTML = '';
     }
@@ -97,7 +98,7 @@ export class RefractionScene {
         descEl.textContent = 'En la miopía, el globo ocular es más largo de lo normal (o la córnea es excesivamente curva). Los haces luminosos convergen en un punto focal antes de alcanzar la retina, provocando que la imagen llegue dispersa y borrosa.';
       }
 
-      // 2. Controles interactivos ubicados DEBAJO del ojo con botón al ejemplo
+      // 2. Interactive controls located BELOW the eye with button to example
       if (dockEl) {
         dockEl.style.display = 'flex';
         dockEl.innerHTML = `
@@ -184,7 +185,7 @@ export class RefractionScene {
         });
       }
     } else if (this.mode === 'hyperopia') {
-      // Modo Hipermetropía
+      // Hyperopia Mode
       if (kickerEl) kickerEl.textContent = 'MÓDULO: HIPERMETROPÍA';
       if (titleEl) titleEl.textContent = 'Acortamiento Axial y Enfoque Post-Retiniano';
       if (descEl) {
@@ -277,14 +278,14 @@ export class RefractionScene {
         });
       }
     } else if (this.mode === 'astigmatism') {
-      // Modo Astigmatismo
+      // Astigmatism Mode
       if (kickerEl) kickerEl.textContent = 'MÓDULO: ASTIGMATISMO';
       if (titleEl) titleEl.textContent = 'Asimetría Corneal y Múltiples Focos';
       if (descEl) {
         descEl.textContent = 'La córnea presenta una curvatura asimétrica (curvaturas distintas en meridianos perpendiculares). Los rayos verticales y horizontales convergen a diferentes profundidades, generando sombras dobles y distorsión.';
       }
 
-      // 2. Controles interactivos ubicados DEBAJO del ojo con botón al ejemplo
+      // 2. Interactive controls located BELOW the eye with button to example
       if (dockEl) {
         dockEl.style.display = 'flex';
         dockEl.innerHTML = `
@@ -371,7 +372,7 @@ export class RefractionScene {
         });
       }
     } else if (this.mode === 'presbyopia') {
-      // Modo Presbicia (Vista Cansada)
+      // Presbyopia Mode (Aging eye)
       if (kickerEl) kickerEl.textContent = 'MÓDULO: PRESBICIA (VISTA CANSADA)';
       if (titleEl) titleEl.textContent = 'Pérdida de Acomodación del Cristalino';
       if (descEl) {
@@ -512,7 +513,7 @@ export class RefractionScene {
     const rApex = this.geometry.retinaApex;
     const isCorrected = this.lens.active && this.lens.opacity > 0.8;
 
-    // 1. Dibuja el corte anatómico sagital
+    // 1. Draw sagittal anatomical section
     let uncorrectedColor = '#ec4899';
     let uncorrectedGlow = 'rgba(236, 72, 153, 0.4)';
     if (this.mode === 'myopia') {
@@ -531,11 +532,11 @@ export class RefractionScene {
       retinaGlow: isCorrected ? 'rgba(16, 185, 129, 0.5)' : uncorrectedGlow
     });
 
-    // 2. Dibuja la lente correctora frente a la córnea
+    // 2. Draw corrective lens in front of cornea
     const lensX = cApex.x - 70 * s;
     this.lens.draw(ctx, lensX, this.geometry.centerY, s);
 
-    // 3. Trazado de rayos fotónicos
+    // 3. Photonic ray tracing
     ctx.save();
 
     if (this.mode === 'myopia') {
@@ -555,16 +556,16 @@ export class RefractionScene {
     const rayOffsets = [-50, -32, -15, 0, 15, 32, 50];
     const sourceX = cApex.x - 260 * s;
 
-    // Cálculo del punto focal:
-    // En hipermetropía el ojo es más corto de lo normal.
-    // Los rayos convergen en un plano focal virtual DETRÁS de la retina.
-    // Con la lente convergente (+), la luz converge antes, llevando el foco directamente a la retina.
+    // Focal point calculation:
+    // In hyperopia the eyeball is shorter than normal.
+    // Rays converge on a virtual focal plane BEHIND the retina.
+    // With convergent lens (+), light converges earlier, shifting focus onto the retina.
     const actualRetinaX = rApex.x;
     const hyperopicOffset = Math.max(35, Math.abs(this.geometry.axialElongation) * 1.3) * s;
     const hyperopicFocalX = actualRetinaX + hyperopicOffset;
     const effectiveFocalX = hyperopicFocalX - (hyperopicFocalX - actualRetinaX) * this.lens.opacity;
 
-    // Colores y glow según corrección
+    // Colors and glow based on correction
     const rayColor = isCorrected ? 'rgba(16, 185, 129, 0.85)' : 'rgba(168, 85, 247, 0.85)';
     const glowColor = isCorrected ? '#10b981' : '#a855f7';
 
@@ -579,33 +580,33 @@ export class RefractionScene {
       ctx.beginPath();
       ctx.moveTo(sourceX, startY);
 
-      // Si pasa por la lente convergente (+)
+      // If passing through convergent lens (+)
       let entryY = startY;
       if (this.lens.opacity > 0.05) {
         ctx.lineTo(lensX, startY);
-        // Desviación convergente hacia el eje óptico
+        // Convergent deflection toward optical axis
         const deflection = this.lens.getDeflectionAngle(offset * s, s);
         entryY = startY + deflection * 70 * s;
       }
 
-      // Incidencia en la córnea
+      // Incidence on cornea
       const corneaHitX = cApex.x + 8 * s;
       ctx.lineTo(corneaHitX, entryY);
 
-      // Paso a través de la cámara anterior hacia el cristalino
+      // Path through anterior chamber toward crystalline lens
       const lensHitX = lCenter.x;
       const lensHitY = entryY * 0.8 + this.geometry.centerY * 0.2;
       ctx.lineTo(lensHitX, lensHitY);
 
-      // Rayo dentro del humor vítreo hacia la retina física
-      // La pendiente del rayo apunta al punto focal effectiveFocalX
+      // Ray inside vitreous humor toward physical retina
+      // Ray slope targets effectiveFocalX
       const slope = (this.geometry.centerY - lensHitY) / (effectiveFocalX - lensHitX);
       const retinaHitY = lensHitY + slope * (actualRetinaX - lensHitX);
 
       ctx.lineTo(actualRetinaX, retinaHitY);
       ctx.stroke();
 
-      // Proyección virtual punteada detrás de la retina cuando el foco es posterior
+      // Dashed virtual projection behind retina when focus is posterior
       if (effectiveFocalX > actualRetinaX + 2 * s) {
         ctx.save();
         ctx.beginPath();
@@ -619,7 +620,7 @@ export class RefractionScene {
       }
     }
 
-    // Dibujo del punto focal
+    // Focal point render
     ctx.beginPath();
     ctx.arc(effectiveFocalX, this.geometry.centerY, 6 * s, 0, Math.PI * 2);
     ctx.fillStyle = isCorrected ? '#10b981' : '#a855f7';
@@ -627,7 +628,7 @@ export class RefractionScene {
     ctx.shadowBlur = 15 * s;
     ctx.fill();
 
-    // Etiqueta del punto focal
+    // Focal point label
     ctx.shadowBlur = 0;
     ctx.fillStyle = ctx.fillStyle;
     ctx.font = `700 ${11 * s}px 'Plus Jakarta Sans', sans-serif`;
@@ -640,16 +641,16 @@ export class RefractionScene {
     const rayOffsets = [-50, -32, -15, 0, 15, 32, 50];
     const sourceX = cApex.x - 260 * s;
 
-    // Cálculo del punto focal
-    // Si la lente no está activa, converge antes de la retina (enfoque prematuro)
+    // Focal point calculation:
+    // If lens is not active, converges in front of retina (premature focus)
     const emmetropeRetinaX = cApex.x + this.geometry.axialLength * s;
     const actualRetinaX = rApex.x;
     
-    // Punto focal en px: sin lente converge en emmetropeRetinaX (o antes), con lente viaja hasta actualRetinaX
+    // Focal point in px: uncorrected converges before retina, corrected travels to actualRetinaX
     const myopicFocalX = emmetropeRetinaX - 10 * s;
     const effectiveFocalX = myopicFocalX + (actualRetinaX - myopicFocalX) * this.lens.opacity;
 
-    // Colores y glow según corrección
+    // Colors and glow based on correction
     const rayColor = isCorrected ? 'rgba(16, 185, 129, 0.85)' : 'rgba(0, 242, 254, 0.85)';
     const glowColor = isCorrected ? '#10b981' : '#00f2fe';
 
@@ -664,28 +665,28 @@ export class RefractionScene {
       ctx.beginPath();
       ctx.moveTo(sourceX, startY);
 
-      // Si pasa por la lente divergente
+      // If passing through divergent lens
       let entryY = startY;
       if (this.lens.opacity > 0.05) {
         ctx.lineTo(lensX, startY);
-        // Desviación divergente hacia afuera
+        // Divergent deflection outward
         const deflection = this.lens.getDeflectionAngle(offset * s, s);
         entryY = startY + deflection * 70 * s;
       }
 
-      // Incidencia en la córnea
+      // Incidence on cornea
       const corneaHitX = cApex.x + 8 * s;
       ctx.lineTo(corneaHitX, entryY);
 
-      // Paso a través de la cámara anterior hacia el cristalino
+      // Path through anterior chamber toward crystalline lens
       const lensHitX = lCenter.x;
       const lensHitY = entryY * 0.8 + this.geometry.centerY * 0.2;
       ctx.lineTo(lensHitX, lensHitY);
 
-      // Convergencia hacia el punto focal F
+      // Convergence toward focal point F
       ctx.lineTo(effectiveFocalX, this.geometry.centerY);
 
-      // Si el punto focal está antes de la retina, los rayos continúan cruzándose y divergen sobre la retina!
+      // If focal point is before retina, rays continue crossing and diverge on retina!
       if (effectiveFocalX < actualRetinaX) {
         const beyondDist = actualRetinaX - effectiveFocalX;
         const slope = (this.geometry.centerY - lensHitY) / (effectiveFocalX - lensHitX);
@@ -696,7 +697,7 @@ export class RefractionScene {
       ctx.stroke();
     }
 
-    // Dibujo del punto focal
+    // Focal point render
     ctx.beginPath();
     ctx.arc(effectiveFocalX, this.geometry.centerY, 6 * s, 0, Math.PI * 2);
     ctx.fillStyle = isCorrected ? '#10b981' : '#f59e0b';
@@ -704,7 +705,7 @@ export class RefractionScene {
     ctx.shadowBlur = 15 * s;
     ctx.fill();
 
-    // Etiqueta del punto focal
+    // Focal point label
     ctx.shadowBlur = 0;
     ctx.fillStyle = ctx.fillStyle;
     ctx.font = `700 ${11 * s}px 'Plus Jakarta Sans', sans-serif`;
@@ -717,12 +718,12 @@ export class RefractionScene {
     const sourceX = cApex.x - 260 * s;
     const actualRetinaX = rApex.x;
 
-    // Astigmatismo: Dos planos focales F1 y F2
+    // Astigmatism: Two focal planes F1 and F2
     const diff = this.meridianDifference * s * (1 - this.lens.opacity);
     const focal1X = actualRetinaX - diff;
     const focal2X = actualRetinaX + diff * 0.5;
 
-    // Rayos del meridiano vertical (Cian / Láser)
+    // Vertical meridian rays (Cyan / Laser)
     const vertOffsets = [-45, -20, 20, 45];
     ctx.lineWidth = 2 * s;
     ctx.strokeStyle = isCorrected ? 'rgba(16, 185, 129, 0.85)' : 'rgba(0, 242, 254, 0.85)';
@@ -746,7 +747,7 @@ export class RefractionScene {
       ctx.stroke();
     }
 
-    // Rayos del meridiano horizontal (Magenta / Rosa óptico)
+    // Horizontal meridian rays (Magenta / Optical pink)
     const horizOffsets = [-30, 30];
     ctx.strokeStyle = isCorrected ? 'rgba(16, 185, 129, 0.7)' : 'rgba(236, 72, 153, 0.85)';
     ctx.shadowColor = isCorrected ? '#10b981' : '#ec4899';
@@ -764,7 +765,7 @@ export class RefractionScene {
       ctx.stroke();
     }
 
-    // Marcadores de Foco F1 y F2
+    // F1 and F2 focal markers
     ctx.fillStyle = isCorrected ? '#10b981' : '#ec4899';
     ctx.shadowColor = ctx.fillStyle;
     ctx.shadowBlur = 12 * s;
@@ -795,7 +796,7 @@ export class RefractionScene {
     const isNear = this.presbyopiaDistance === 'near';
 
     if (!isNear) {
-      // 1. Visión Lejana: El paciente con presbicia conserva buena visión lejana (ojo emétrope en reposo)
+      // 1. Distance Vision: Presbyopic patient retains good distance vision (emmetropic at rest)
       const rayOffsets = [-48, -30, -14, 0, 14, 30, 48];
       const sourceX = cApex.x - 260 * s;
 
@@ -823,7 +824,7 @@ export class RefractionScene {
         ctx.stroke();
       }
 
-      // Punto focal sobre la retina
+      // Focal point on retina
       ctx.beginPath();
       ctx.arc(actualRetinaX, this.geometry.centerY, 6 * s, 0, Math.PI * 2);
       ctx.fillStyle = '#10b981';
@@ -837,12 +838,12 @@ export class RefractionScene {
       ctx.fillText('Visión Lejana Conservada (Foco en Retina)', actualRetinaX, this.geometry.centerY - 20 * s);
 
     } else {
-      // 2. Visión Cercana / Lectura (40 cm): Rayos divergentes
+      // 2. Near Vision / Reading (40 cm): Divergent rays
       const nearSourceX = cApex.x - 200 * s;
       const nearSourceY = this.geometry.centerY;
       const targetOffsets = [-42, -26, -10, 8, 24, 40];
 
-      // Indicador visual de objeto de lectura
+      // Visual indicator for reading object
       ctx.save();
       ctx.shadowBlur = 10 * s;
       ctx.shadowColor = '#06b6d4';
@@ -858,9 +859,9 @@ export class RefractionScene {
       ctx.fillText('📖 Lectura (40 cm)', nearSourceX, nearSourceY - 14 * s);
       ctx.restore();
 
-      // Cálculo del punto focal en presbicia para cerca:
-      // El cristalino rígido no acomoda -> los rayos divergentes convergen DETRÁS de la retina.
-      // La adición positiva del lente progresivo reposiciona el foco en la fóvea.
+      // Presbyopia near focal point calculation:
+      // Rigid crystalline lens cannot accommodate -> divergent rays converge BEHIND retina.
+      // Positive addition of progressive lens brings focus to fovea.
       const uncorrectedFocalX = actualRetinaX + (32 + this.addition * 18) * s;
       const effectiveFocalX = uncorrectedFocalX - (uncorrectedFocalX - actualRetinaX) * this.lens.opacity;
 
@@ -892,14 +893,14 @@ export class RefractionScene {
         const lensHitY = entryY * 0.8 + this.geometry.centerY * 0.2;
         ctx.lineTo(lensHitX, lensHitY);
 
-        // Rayo dentro del vítreo hacia el foco effectiveFocalX
+        // Ray inside vitreous humor toward effectiveFocalX
         const slope = (this.geometry.centerY - lensHitY) / (effectiveFocalX - lensHitX);
         const retinaHitY = lensHitY + slope * (actualRetinaX - lensHitX);
 
         ctx.lineTo(actualRetinaX, retinaHitY);
         ctx.stroke();
 
-        // Proyección virtual punteada posterior si no está enfocado
+        // Dashed virtual projection behind retina if uncorrected
         if (effectiveFocalX > actualRetinaX + 2 * s) {
           ctx.save();
           ctx.beginPath();
@@ -913,7 +914,7 @@ export class RefractionScene {
         }
       }
 
-      // Marcador del punto focal
+      // Focal point marker
       ctx.beginPath();
       ctx.arc(effectiveFocalX, this.geometry.centerY, 6 * s, 0, Math.PI * 2);
       ctx.fillStyle = isCorrected ? '#10b981' : '#06b6d4';
@@ -921,7 +922,7 @@ export class RefractionScene {
       ctx.shadowBlur = 15 * s;
       ctx.fill();
 
-      // Etiqueta del punto focal
+      // Focal point label
       ctx.shadowBlur = 0;
       ctx.fillStyle = ctx.fillStyle;
       ctx.font = `700 ${11 * s}px 'Plus Jakarta Sans', sans-serif`;

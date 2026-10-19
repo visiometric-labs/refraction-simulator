@@ -1,9 +1,9 @@
 {
-  "name": "ocularis",
+  "name": "refraction-simulator",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Experiencia educativa óptica interactiva para consulta optométrica",
+  "description": "Interactive optical refraction and corrective lens simulator",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,6 +1,6 @@
 /**
- * Bus de eventos pub/sub desacoplado para comunicación entre
- * la máquina de estados, el motor de canvas, HUD y escenas.
+ * Decoupled pub/sub event bus for communication between
+ * the state machine, canvas engine, HUD, and scenes.
  */
 class EventBus {
   constructor() {
@@ -9,10 +9,10 @@ class EventBus {
   }
 
   /**
-   * Suscribe un callback a un evento.
+   * Subscribes a callback to an event.
    * @param {string} event
    * @param {Function} callback
-   * @returns {Function} Función para cancelar la suscripción
+   * @returns {Function} Unsubscribe function
    */
   on(event, callback) {
     if (!this.listeners.has(event)) {
@@ -23,7 +23,7 @@ class EventBus {
   }
 
   /**
-   * Desuscribe un callback de un evento.
+   * Unsubscribes a callback from an event.
    * @param {string} event
    * @param {Function} callback
    */
@@ -38,7 +38,7 @@ class EventBus {
   }
 
   /**
-   * Emite un evento con datos asociados.
+   * Emits an event with associated data.
    * @param {string} event
    * @param {any} [data]
    */
@@ -49,7 +49,7 @@ class EventBus {
       try {
         cb(data);
       } catch (err) {
-        console.error(`[EventBus] Error al procesar evento "${event}":`, err);
+        console.error(`[EventBus] Error processing event "${event}":`, err);
       }
     }
   }

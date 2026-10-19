@@ -21,7 +21,7 @@ export class HudController {
   }
 
   bindEvents() {
-    // Navegación HUD
+    // HUD navigation
     this.btnPrev?.addEventListener('click', () => stateMachine.prev());
     this.btnNext?.addEventListener('click', () => stateMachine.next());
     this.btnReset?.addEventListener('click', () => stateMachine.reset());
@@ -35,7 +35,7 @@ export class HudController {
       }
     });
 
-    // Clic en los puntos de etapa de la línea de tiempo
+    // Click on timeline stage dots
     this.stageDots.forEach(dot => {
       dot.addEventListener('click', () => {
         const stageIdx = parseInt(dot.dataset.stage, 10);
@@ -43,7 +43,7 @@ export class HudController {
       });
     });
 
-    // Accesos directos superiores
+    // Top shortcut pills
     this.shortcutBtns.forEach(btn => {
       btn.addEventListener('click', () => {
         const target = btn.dataset.jump;
@@ -51,7 +51,7 @@ export class HudController {
       });
     });
 
-    // Botón discreto de pantalla completa
+    // Discreet fullscreen toggle button
     this.btnToggleFs?.addEventListener('click', async () => {
       await toggleFullscreen();
       this.updateFullscreenIcon();
@@ -60,31 +60,31 @@ export class HudController {
     document.addEventListener('fullscreenchange', () => this.updateFullscreenIcon());
     document.addEventListener('webkitfullscreenchange', () => this.updateFullscreenIcon());
 
-    // Botón discreto encima del Macro-Ojo
+    // Discreet button above Macro-Eye
     const btnEnterEye = document.getElementById('btn-enter-interior');
     btnEnterEye?.addEventListener('click', () => {
       stateMachine.jumpTo(States.ANATOMY);
     });
 
-    // Escuchar cambios de estado desde la máquina de estados
+    // Listen to state changes from state machine
     events.on('state:change', ({ to, index, title }) => {
       this.syncUI(to, index, title);
     });
   }
 
   syncUI(toState, index, title) {
-    // 1. Badge superior
+    // 1. Top badge
     if (this.stageBadgeEl) {
       this.stageBadgeEl.textContent = title || STAGE_TITLES[toState] || '';
     }
 
-    // 2. Línea de tiempo de etapas
+    // 2. Stage timeline dots
     this.stageDots.forEach((dot, idx) => {
       dot.classList.toggle('active', idx === index);
       dot.classList.toggle('completed', idx < index);
     });
 
-    // 3. Accesos directos superiores
+    // 3. Top shortcut pills
     this.shortcutBtns.forEach(btn => {
       const jump = btn.dataset.jump;
       const isMatch = (jump === 'eye-hero' && toState === States.EYE_HERO) ||
@@ -96,13 +96,13 @@ export class HudController {
       btn.classList.toggle('active', isMatch);
     });
 
-    // 4. Botón Anterior (deshabilitado en etapa 0)
+    // 4. Previous button (disabled on stage 0)
     if (this.btnPrev) {
       this.btnPrev.style.opacity = index <= 0 ? '0.35' : '1';
       this.btnPrev.style.pointerEvents = index <= 0 ? 'none' : 'auto';
     }
 
-    // 5. Botón Siguiente (texto dinámico en etapa final)
+    // 5. Next button (dynamic text on final stage)
     if (this.btnNext) {
       const nextSpan = this.btnNext.querySelector('span');
       if (nextSpan) {

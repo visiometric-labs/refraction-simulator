@@ -51,14 +51,14 @@ class StateMachine {
   }
 
   /**
-   * Obtiene el índice numérico (0 a 6) de la etapa en el recorrido, o -1 si está en ENTRY.
+   * Gets the numerical index (0 to 10) of the stage in the sequence, or -1 if in ENTRY.
    */
   get currentStageIndex() {
     return STAGE_SEQUENCE.indexOf(this.current);
   }
 
   /**
-   * Transiciona a un nuevo estado.
+   * Transitions to a new state.
    * @param {string} nextState
    * @param {object} [payload]
    */
@@ -79,7 +79,7 @@ class StateMachine {
   }
 
   /**
-   * Avanza a la siguiente etapa de la secuencia pedagógica.
+   * Advances to the next stage in the educational sequence.
    */
   next() {
     const idx = this.currentStageIndex;
@@ -91,7 +91,7 @@ class StateMachine {
   }
 
   /**
-   * Retrocede a la etapa previa.
+   * Returns to the previous stage.
    */
   prev() {
     const idx = this.currentStageIndex;
@@ -101,7 +101,7 @@ class StateMachine {
   }
 
   /**
-   * Salta directamente a una etapa por su clave de estado o por su índice numérico.
+   * Jumps directly to a stage by its state key or numerical index.
    * @param {string|number} target
    */
   jumpTo(target) {
@@ -115,7 +115,7 @@ class StateMachine {
   }
 
   /**
-   * Alterna el estado de pausa de la simulación.
+   * Toggles simulation pause state.
    */
   togglePlayPause() {
     this.isPaused = !this.isPaused;
@@ -124,7 +124,7 @@ class StateMachine {
   }
 
   /**
-   * Reinicia la experiencia al Macro-Ojo.
+   * Resets the experience back to Hero Eye stage.
    */
   reset() {
     this.transition(States.EYE_HERO);

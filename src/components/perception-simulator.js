@@ -1,16 +1,16 @@
 import { stateMachine, States } from '../core/state-machine.js';
 
 /**
- * Simulador de percepción visual con comparador Split-Screen interactivo (Antes / Después).
- * Permite al paciente y optometrista arrastrar el divisor para experimentar
- * cómo percibe el mundo un ojo con Miopía o Astigmatismo frente a la visión corregida.
+ * Visual perception simulator with interactive Before/After Split-Screen comparator.
+ * Allows patient and optometrist to drag divider to experience how an eye
+ * with Myopia, Hyperopia, Presbyopia, or Astigmatism perceives the world vs corrected vision.
  */
 export class PerceptionSimulator {
   /**
-   * @param {'myopia'|'hyperopia'|'astigmatism'} mode 
+   * @param {'myopia'|'hyperopia'|'astigmatism'|'presbyopia'} mode 
    */
   constructor(mode = 'myopia') {
-    this.mode = mode; // 'myopia' | 'hyperopia' | 'astigmatism'
+    this.mode = mode; // 'myopia' | 'hyperopia' | 'astigmatism' | 'presbyopia'
     this.container = null;
     this.divider = null;
     this.wrapper = null;
@@ -20,7 +20,7 @@ export class PerceptionSimulator {
 
     this.sharpCanvas = null;
     this.blurredCanvas = null;
-    this.blurAmount = 8; // px de desenfoque base
+    this.blurAmount = 8; // Base blur px
     this.boundExitHandler = null;
     this.animTimeout = null;
     this.boundSceneClick = null;
@@ -32,7 +32,7 @@ export class PerceptionSimulator {
   }
 
   onEnter() {
-    // 1. Asegurar que el dock de controles de refracción esté completamente oculto durante el ejemplo
+    // 1. Ensure refraction controls dock is completely hidden during perception example
     const dockEl = document.getElementById('refraction-dock');
     if (dockEl) {
       dockEl.style.display = 'none';
@@ -58,7 +58,7 @@ export class PerceptionSimulator {
       }
     }
 
-    // 2. Configurar el botón para salir del ejemplo y volver a la explicación clínica
+    // 2. Configure button to exit simulation and return to clinical explanation
     const btnExit = document.getElementById('btn-exit-simulation');
     const btnExitText = document.getElementById('btn-exit-simulation-text');
     if (btnExitText) {
@@ -282,8 +282,8 @@ export class PerceptionSimulator {
   }
 
   /**
-   * Renderiza el lienzo de prueba clínico: Tabla de optotipos Snellen
-   * y farolas nocturnas de alto contraste para demostrar halos y bokeh
+   * Renders clinical test canvas: Snellen optotype chart
+   * and high-contrast night lampposts to demonstrate halos and bokeh
    */
   renderTestScenes() {
     if (!this.sharpCanvas || !this.blurredCanvas) return;
@@ -293,10 +293,10 @@ export class PerceptionSimulator {
     const ctxSharp = this.sharpCanvas.getContext('2d');
     const ctxBlur = this.blurredCanvas.getContext('2d');
 
-    // 1. Dibuja la escena nítida perfecta
+    // 1. Draw crisp sharp scene
     this.drawClinicalScene(ctxSharp, w, h, false);
 
-    // 2. Dibuja la escena con desenfoque / distorsión
+    // 2. Draw blurred / distorted scene
     this.drawClinicalScene(ctxBlur, w, h, true);
   }
 
@@ -304,7 +304,7 @@ export class PerceptionSimulator {
     ctx.save();
     ctx.clearRect(0, 0, w, h);
 
-    // Fondo de gabinete clínico nocturno
+    // Night clinical room background
     const bgGrad = ctx.createLinearGradient(0, 0, w, h);
     bgGrad.addColorStop(0, '#040914');
     bgGrad.addColorStop(0.5, '#071224');
@@ -312,18 +312,18 @@ export class PerceptionSimulator {
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
 
-    // Configuración de desenfoque diferencial según condición clínica
-    // A) Optotipo Snellen retroiluminado a la izquierda (Visión Cercana de Gabinete / Lectura)
+    // Differential blur configuration according to clinical condition
+    // A) Backlit Snellen optotype on the left (Near / Reading Vision)
     ctx.save();
     if (!isBlurred) {
       ctx.filter = 'none';
     } else if (this.mode === 'myopia') {
       ctx.filter = `blur(${this.blurAmount}px)`;
     } else if (this.mode === 'hyperopia') {
-      // En hipermetropía la visión de cerca es la más perjudicada
+      // In hyperopia near vision is most compromised
       ctx.filter = `blur(${this.blurAmount * 1.55}px)`;
     } else if (this.mode === 'presbyopia') {
-      // En presbicia la visión cercana pierde definición por falta de acomodación
+      // In presbyopia near vision loses definition due to loss of accommodation
       ctx.filter = `blur(${this.blurAmount * 1.6}px)`;
     } else {
       ctx.filter = `blur(${this.blurAmount * 0.7}px)`;
@@ -334,14 +334,14 @@ export class PerceptionSimulator {
     const chartW = 320;
     const chartH = 400;
 
-    // Caja de optotipo
+    // Optotype chart box
     ctx.fillStyle = '#ffffff';
     ctx.fillRect(chartX, chartY, chartW, chartH);
     ctx.lineWidth = 4;
     ctx.strokeStyle = (this.mode === 'hyperopia' && isBlurred) ? '#a855f7' : ((this.mode === 'presbyopia' && isBlurred) ? '#06b6d4' : '#0284c7');
     ctx.strokeRect(chartX, chartY, chartW, chartH);
 
-    // Letras Snellen nítidas
+    // Sharp Snellen letters
     ctx.fillStyle = '#0f172a';
     ctx.textAlign = 'center';
     ctx.font = 'bold 74px "Plus Jakarta Sans", sans-serif';
@@ -364,18 +364,18 @@ export class PerceptionSimulator {
 
     ctx.restore();
 
-    // B) Paisaje urbano nocturno a la derecha (Visión Lejana / Semáforos y Luces)
+    // B) Night urban landscape on the right (Distance Vision / Traffic lights and headlamps)
     ctx.save();
     if (!isBlurred) {
       ctx.filter = 'none';
     } else if (this.mode === 'myopia') {
       ctx.filter = `blur(${this.blurAmount}px)`;
     } else if (this.mode === 'hyperopia') {
-      // En hipermetropía la visión lejana se mantiene mucho más clara
+      // In hyperopia distance vision remains much clearer
       const farBlur = Math.max(0, (this.blurAmount - 6) * 0.25);
       ctx.filter = farBlur > 0 ? `blur(${farBlur}px)` : 'none';
     } else if (this.mode === 'presbyopia') {
-      // En presbicia pura la visión lejana en reposo permanece nítida
+      // In pure presbyopia distance vision at rest remains sharp
       ctx.filter = 'none';
     } else {
       ctx.filter = `blur(${this.blurAmount * 0.7}px)`;
@@ -386,21 +386,21 @@ export class PerceptionSimulator {
     const sceneW = 340;
     const sceneH = 400;
 
-    // Ventana exterior
+    // Exterior window
     ctx.fillStyle = '#050b14';
     ctx.fillRect(sceneX, sceneY, sceneW, sceneH);
     ctx.strokeStyle = 'rgba(56, 189, 248, 0.4)';
     ctx.lineWidth = 2;
     ctx.strokeRect(sceneX, sceneY, sceneW, sceneH);
 
-    // Luces de tráfico lejanas (Bokeh circles)
+    // Distance traffic lights (Bokeh circles)
     const lights = [
-      { x: sceneX + 60, y: sceneY + 140, r: 16, color: '#ef4444' }, // Semáforo Rojo
-      { x: sceneX + 60, y: sceneY + 200, r: 16, color: '#f59e0b' }, // Semáforo Ámbar
-      { x: sceneX + 60, y: sceneY + 260, r: 16, color: '#10b981' }, // Semáforo Verde
-      { x: sceneX + 160, y: sceneY + 220, r: 24, color: '#00f2fe' }, // Luz de coche xenon
+      { x: sceneX + 60, y: sceneY + 140, r: 16, color: '#ef4444' }, // Red traffic light
+      { x: sceneX + 60, y: sceneY + 200, r: 16, color: '#f59e0b' }, // Amber traffic light
+      { x: sceneX + 60, y: sceneY + 260, r: 16, color: '#10b981' }, // Green traffic light
+      { x: sceneX + 160, y: sceneY + 220, r: 24, color: '#00f2fe' }, // Xenon car headlamp
       { x: sceneX + 260, y: sceneY + 220, r: 24, color: '#38bdf8' },
-      { x: sceneX + 210, y: sceneY + 110, r: 12, color: '#fbbf24' }  // Farola lejana
+      { x: sceneX + 210, y: sceneY + 110, r: 12, color: '#fbbf24' }  // Far street lamp
     ];
 
     lights.forEach(l => {
@@ -423,7 +423,7 @@ export class PerceptionSimulator {
 
     ctx.restore();
 
-    // En astigmatismo: dibuja sombra fantasma superpuesta
+    // In astigmatism: draw superimposed ghost shadow
     if (isBlurred && this.mode === 'astigmatism') {
       ctx.filter = `blur(${this.blurAmount * 0.4}px)`;
       ctx.fillStyle = 'rgba(15, 23, 42, 0.45)';

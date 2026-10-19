@@ -1,9 +1,9 @@
 import { stateMachine, States } from '../core/state-machine.js';
 
 /**
- * Escena de Síntesis Clínica (Etapa 7).
- * Conclusión pedagógica del optometrista hacia el paciente,
- * reforzando el valor de la graduación y el cuidado visual.
+ * Clinical Synthesis Scene (Stage 11).
+ * Pedagogical conclusion from optometrist to patient,
+ * reinforcing prescription value and visual care.
  */
 export class SynthesisScene {
   constructor() {
@@ -15,7 +15,7 @@ export class SynthesisScene {
   }
 
   onExit() {
-    // Limpieza
+    // Cleanup
   }
 
   onResize(width, height) {}
@@ -84,7 +84,7 @@ export class SynthesisScene {
 
     ctx.save();
 
-    // Ondas concéntricas de luz armónica (representando salud visual y equilibrio refractivo)
+    // Harmonic concentric light rings (representing visual health and refractive equilibrium)
     const rings = 4;
     for (let i = 0; i < rings; i++) {
       const radius = (60 + i * 45 + Math.sin(this.time * 2 + i) * 8) * scale;
@@ -97,7 +97,7 @@ export class SynthesisScene {
       ctx.stroke();
     }
 
-    // Foco central esmeralda nítido
+    // Sharp emerald central focus
     ctx.beginPath();
     ctx.arc(cx, cy, 12 * scale, 0, Math.PI * 2);
     ctx.fillStyle = '#10b981';

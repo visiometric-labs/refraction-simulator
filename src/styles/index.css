@@ -744,7 +744,7 @@ html, body {
   }
 }
 
-/* Layout compacto y optimizado para el módulo de Presbicia */
+/* Compact, optimized layout for Presbyopia module */
 .refraction-controls-card.presbyopia-controls-card {
   padding: 12px 18px;
 }
@@ -830,9 +830,9 @@ html, body {
   padding-top: 2px;
 }
 
-/* Separador y Botón hacia el Ejemplo / Simulación */
+/* Separator and button leading to Example / Perception Simulation */
 .dock-action-separator {
-  margin-top: 18px; /* Buena distancia respecto a los controles solicitada por el usuario */
+  margin-top: 18px; /* Comfortable separation from controls requested by user */
   display: flex;
   justify-content: center;
   width: 100%;
@@ -875,7 +875,7 @@ html, body {
 }
 
 /* =========================================================
-   6. ANATOMY INTERACTIVE LAYER (Pines y Etiquetas)
+   6. ANATOMY INTERACTIVE LAYER (Pins & Badges)
    ========================================================= */
 .anatomy-pills-layer {
   position: absolute;
@@ -908,7 +908,7 @@ html, body {
   }
 }
 
-/* Badge principal compacto (Número + Nombre de estructura) */
+/* Compact main badge (Number + Structure name) */
 .pin-badge {
   display: flex;
   align-items: center;
@@ -959,7 +959,7 @@ html, body {
   letter-spacing: 0.01em;
 }
 
-/* Tooltip explicativo flotante: SOLO se muestra en hover o activo */
+/* Floating explanatory tooltip: ONLY visible on hover or active */
 .pin-tooltip {
   position: absolute;
   top: calc(100% + 6px);
@@ -989,7 +989,7 @@ html, body {
   transform: translateX(-50%) translateY(0);
 }
 
-/* Tooltip posicionado hacia arriba para pines superiores (evita solapar elementos inferiores) */
+/* Tooltip positioned upward for top pins (prevents overlapping bottom elements) */
 .anatomy-pin.tooltip-top .pin-tooltip {
   top: auto;
   bottom: calc(100% + 8px);
@@ -1342,12 +1342,12 @@ html, body {
 
 /* =========================================================
    TABLET RESPONSIVE ADAPTATIONS (768px - 1024px)
-   - Reducción general de tamaño de textos
-   - Cuadro explicativo compacto para no tapar el ojo
-   - Opción para ocultar / restaurar el cuadro SOLO en tablet
+   - General text size reduction
+   - Compact concept card to avoid obstructing the eye
+   - Option to hide / restore concept card ONLY on tablet
    ========================================================= */
 @media (max-width: 1024px) {
-  /* 1. Reducción tipográfica general del cuadro explicativo */
+  /* 1. General typography reduction for explanatory card */
   .card-kicker {
     font-size: 0.62rem;
     letter-spacing: 0.09em;
@@ -1367,7 +1367,7 @@ html, body {
     margin-bottom: 10px;
   }
 
-  /* 2. Compactación de dimensiones del cuadro para no obstruir el ojo */
+  /* 2. Compact card dimensions to prevent eye obstruction */
   .scene-overlay {
     top: 66px;
     left: 14px;
@@ -1380,7 +1380,7 @@ html, body {
     border-radius: var(--radius-md);
   }
 
-  /* 3. Botón para OCULTAR el cuadro de conceptos (exclusivo de tablet) */
+  /* 3. Button to HIDE concept card (tablet exclusive) */
   .btn-card-toggle {
     display: inline-flex;
     align-items: center;
@@ -1409,7 +1409,7 @@ html, body {
     color: var(--cyan-primary);
   }
 
-  /* 4. Estado COLAPSADO: cuadro oculto con botón flotante para restaurar */
+  /* 4. COLLAPSED state: hidden card with floating restore button */
   .scene-overlay.collapsed .scene-card {
     display: none !important;
   }
@@ -1448,7 +1448,7 @@ html, body {
     box-shadow: 0 0 8px var(--cyan-primary);
   }
 
-  /* 5. Ajustes de fuentes y componentes complementarios en tablet */
+  /* 5. Font adjustments and complementary components on tablet */
   .toggle-pill-btn {
     font-size: 0.72rem;
     padding: 5px 9px;

@@ -1,7 +1,7 @@
 /**
- * Motor central de renderizado Canvas 2D a 60 FPS para Ocularis.
- * Gestiona el ciclo de vida de las escenas, partículas de ambiente,
- * transiciones cinematográficas animadas y soporte para pantallas Retina/4K.
+ * Core 60 FPS 2D Canvas rendering engine for the Refraction Simulator.
+ * Manages scene lifecycle, ambient particles, animated cinematic
+ * transitions, and Retina/4K display support.
  */
 
 export class OpticalEngine {
@@ -20,15 +20,15 @@ export class OpticalEngine {
     this.lastTime = 0;
     this.animationFrameId = null;
 
-    // Sistema de transiciones cinemáticas
+    // Cinematic transition system
     this.isTransitioning = false;
     this.transitionType = 'photon-sweep'; // 'zoom-in' | 'zoom-out' | 'photon-sweep' | 'crossfade'
     this.transitionProgress = 0;
-    this.transitionDuration = 0.85; // Segundos
+    this.transitionDuration = 0.85; // Seconds
     this.fromScene = null;
     this.toScene = null;
 
-    // Partículas de luz ambiente (polvo fotónico en suspensión)
+    // Ambient light particles (suspended photonic dust)
     this.particles = [];
     this.initParticles(45);
 
@@ -42,7 +42,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Inicializa partículas fotónicas bioluminiscentes de fondo
+   * Initializes bioluminescent background photonic particles
    * @param {number} count 
    */
   initParticles(count) {
@@ -61,7 +61,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Ajusta el tamaño del canvas teniendo en cuenta el devicePixelRatio
+   * Resizes canvas accounting for devicePixelRatio
    */
   _handleResize() {
     this.dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -84,7 +84,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Cambio inmediato de escena sin animación (usado solo al inicializar)
+   * Immediate scene switch without animation (used only on init)
    * @param {object} scene 
    */
   setScene(scene) {
@@ -98,10 +98,10 @@ export class OpticalEngine {
   }
 
   /**
-   * Transición cinemática fluida entre escenas con efectos de cámara
-   * @param {object} targetScene Nueva escena hacia la que transicionar
+   * Smooth cinematic transition between scenes with camera effects
+   * @param {object} targetScene Target scene to transition towards
    * @param {'zoom-in'|'zoom-out'|'photon-sweep'|'crossfade'} [type='photon-sweep']
-   * @param {number} [duration=0.85] Duración en segundos
+   * @param {number} [duration=0.85] Duration in seconds
    */
   transitionTo(targetScene, type = 'photon-sweep', duration = 0.85) {
     if (!this.activeScene) {
@@ -110,17 +110,17 @@ export class OpticalEngine {
     }
 
     if (this.activeScene === targetScene) {
-      // Si ya es la escena activa pero se reactiva (por ej. volviendo de la percepción), asegurar re-inicialización de UI
+      // If already active scene but reactivated (e.g. returning from perception), ensure UI re-initialization
       targetScene?.onEnter?.(this.width, this.height);
       return;
     }
 
-    // Si ya había una transición en curso, sal de la anterior inmediatamente
+    // If a transition was already in progress, exit previous immediately
     if (this.isTransitioning && this.fromScene) {
       this.fromScene.onExit?.();
     }
 
-    // Salir de la escena actual y limpiar su UI antes de iniciar la nueva
+    // Exit current scene and clean its UI before starting new one
     this.activeScene?.onExit?.();
 
     this.fromScene = this.activeScene;
@@ -130,21 +130,21 @@ export class OpticalEngine {
     this.transitionProgress = 0;
     this.isTransitioning = true;
 
-    // Inicializar la escena entrante
+    // Initialize incoming scene
     if (this.toScene?.onEnter) {
       this.toScene.onEnter(this.width, this.height);
     }
   }
 
   /**
-   * Función de suavizado cubic-bezier para movimientos cinemáticos
+   * Cubic-bezier easing function for cinematic motion
    */
   _easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
   }
 
   /**
-   * Inicia el render loop
+   * Starts the render loop
    */
   start() {
     if (!this.animationFrameId) {
@@ -154,7 +154,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Detiene el render loop
+   * Stops the render loop
    */
   stop() {
     if (this.animationFrameId) {
@@ -164,14 +164,14 @@ export class OpticalEngine {
   }
 
   /**
-   * Alterna la pausa del render loop
+   * Toggles pause state of render loop
    */
   setPaused(paused) {
     this.isPaused = paused;
   }
 
   /**
-   * Bucle principal de animación a 60 FPS
+   * Main animation loop at 60 FPS
    * @param {number} timestamp 
    */
   _renderLoop(timestamp) {
@@ -179,13 +179,13 @@ export class OpticalEngine {
     this.lastTime = timestamp;
     const dt = Math.min(rawDt, 0.1); // clamp delta-time
 
-    // 1. Limpieza de fondo con gradiente nocturno
+    // 1. Clear background with night gradient
     this._renderBackground();
 
-    // 2. Partículas fotónicas de fondo
+    // 2. Background photonic particles
     this._renderParticles(dt);
 
-    // 3. Renderizado de escena normal o con transición
+    // 3. Normal or transition scene render
     if (this.isTransitioning && this.fromScene && this.toScene) {
       this._renderTransition(dt);
     } else if (this.activeScene) {
@@ -201,7 +201,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Renderizado de la transición cinemática entre escenas
+   * Renders cinematic transition between scenes
    * @param {number} dt 
    */
   _renderTransition(dt) {
@@ -215,15 +215,14 @@ export class OpticalEngine {
     const cx = w * 0.5;
     const cy = h * 0.5;
 
-    // Actualizar ambas escenas durante la transición para que no se congelen
+    // Update both scenes during transition so they do not freeze
     if (!this.isPaused) {
       this.fromScene.update?.(dt);
       this.toScene.update?.(dt);
     }
 
     if (this.transitionType === 'zoom-in') {
-      // Zoom-In cinematográfico: El Macro-Ojo se agranda hacia la pupila y se desvanece
-      // mientras el corte anatómico surge expandiéndose desde el centro
+      // Cinematic Zoom-In: Macro eye expands into pupil and fades as sagittal cut emerges from center
       ctx.save();
       ctx.translate(cx, cy);
       const scaleFrom = 1 + ease * 2.8;
@@ -242,11 +241,11 @@ export class OpticalEngine {
       this.toScene.draw(ctx, w, h);
       ctx.restore();
 
-      // Anillo de onda expansiva de luz al pasar el portal de la pupila
+      // Shockwave ring when passing through pupil portal
       this._drawWarpShockwave(ctx, cx, cy, ease, Math.max(w, h));
 
     } else if (this.transitionType === 'zoom-out') {
-      // Zoom-Out cinematográfico: El corte sagital se aleja y el ojo macro emerge envolvente
+      // Cinematic Zoom-Out: Sagittal cut zooms out and macro eye envelops
       ctx.save();
       ctx.translate(cx, cy);
       const scaleFrom = 1 - ease * 0.35;
@@ -266,7 +265,7 @@ export class OpticalEngine {
       ctx.restore();
 
     } else {
-      // 'photon-sweep' / 'crossfade': Disolución con barrido de rayo láser bioluminiscente
+      // 'photon-sweep' / 'crossfade': Dissolve with bioluminescent laser beam sweep
       ctx.save();
       ctx.globalAlpha = Math.max(0, 1 - ease);
       this.fromScene.draw(ctx, w, h);
@@ -277,11 +276,11 @@ export class OpticalEngine {
       this.toScene.draw(ctx, w, h);
       ctx.restore();
 
-      // Barrido de rayo fotónico transversal
+      // Transverse photonic laser sweep
       this._drawLaserSweep(ctx, w, h, ease);
     }
 
-    // Finalizar transición cuando se alcanza el 100%
+    // Complete transition when 100% reached
     if (t >= 1) {
       this.activeScene = this.toScene;
       this.fromScene = null;
@@ -291,7 +290,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Dibuja un haz láser vertical de luz cian que barre la pantalla
+   * Draws a vertical cyan laser beam that sweeps across the screen
    */
   _drawLaserSweep(ctx, w, h, ease) {
     const sweepX = ease * (w + 240) - 120;
@@ -306,7 +305,7 @@ export class OpticalEngine {
     ctx.fillStyle = beamGrad;
     ctx.fillRect(sweepX - beamWidth, 0, beamWidth * 2, h);
 
-    // Línea láser central brillante
+    // Central bright laser line
     ctx.beginPath();
     ctx.moveTo(sweepX, 0);
     ctx.lineTo(sweepX, h);
@@ -319,7 +318,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Dibuja onda de choque bioluminiscente durante el zoom al interior de la pupila
+   * Draws bioluminescent shockwave during zoom into pupil interior
    */
   _drawWarpShockwave(ctx, cx, cy, ease, maxDim) {
     const radius = ease * maxDim * 0.65;
@@ -337,7 +336,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Dibuja el fondo médico con gradiente radial atmosférico
+   * Draws medical background with radial atmospheric gradient
    */
   _renderBackground() {
     const ctx = this.ctx;
@@ -357,7 +356,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Actualiza y dibuja partículas fotónicas en suspensión
+   * Updates and draws suspended photonic particles
    * @param {number} dt 
    */
   _renderParticles(dt) {
@@ -388,11 +387,11 @@ export class OpticalEngine {
   }
 
   /**
-   * Vincula listeners de interacción táctil y ratón
+   * Binds touch and mouse interaction listeners
    */
   _attachInputListeners() {
     const forwardPointer = (method, e) => {
-      if (this.isTransitioning) return; // Evitar clicks espurios durante la animación
+      if (this.isTransitioning) return; // Avoid spurious clicks during transition animation
       const rect = this.canvas.getBoundingClientRect();
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
@@ -422,7 +421,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Destrucción de recursos al desmontar
+   * Resource cleanup on teardown
    */
   destroy() {
     this.stop();

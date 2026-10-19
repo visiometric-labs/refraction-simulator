@@ -5,7 +5,7 @@ export class AnatomyExplorerScene {
   constructor() {
     this.geometry = new EyeGeometry();
     this.time = 0;
-    this.selectedStructureIndex = -1; // -1 significa que nada está seleccionado inicialmente
+    this.selectedStructureIndex = -1; // -1 means nothing is selected initially
     this.pillsLayerEl = null;
 
     this.structures = [
@@ -40,10 +40,10 @@ export class AnatomyExplorerScene {
         shortDesc: 'Lente interna de enfoque dinámico',
         fullDesc: 'Lente bi-convexa flexible. Mediante la acomodación muscular, modifica su curvatura para afinar el enfoque a cualquier distancia.',
         relX: -30,
-        relY: -148, // Ajustado 1/4 hacia abajo para equilibrio estético perfecto
+        relY: -148, // Adjusted downward for balanced aesthetics
         targetX: -60,
         targetY: -45,
-        tooltipPos: 'top' // Tooltip abre hacia arriba para no tapar nada debajo
+        tooltipPos: 'top' // Tooltip opens upward to avoid covering lower structures
       },
       {
         id: 'vitreous',
@@ -74,13 +74,13 @@ export class AnatomyExplorerScene {
 
   onEnter(width, height) {
     this.geometry.updateLayout(width, height);
-    this.selectedStructureIndex = -1; // Iniciar sin selección
+    this.selectedStructureIndex = -1; // Start with no selection
     this.pillsLayerEl = document.getElementById('anatomy-pills-layer');
     if (this.pillsLayerEl) {
       this.pillsLayerEl.style.display = 'block';
       this.renderPins();
 
-      // Al hacer clic en el fondo libre, deselecciona
+      // Clicking on free background deselects
       this.pillsLayerEl.onclick = (e) => {
         if (e.target === this.pillsLayerEl) {
           this.selectStructure(-1);
@@ -104,7 +104,7 @@ export class AnatomyExplorerScene {
   }
 
   onMouseDown(x, y) {
-    // Si se hace clic en el canvas fuera de los pines, deselecciona
+    // Clicking on canvas outside pins deselects
     this.selectStructure(-1);
   }
 
@@ -137,7 +137,7 @@ export class AnatomyExplorerScene {
 
       pinEl.addEventListener('click', (e) => {
         e.stopPropagation();
-        // Si ya está seleccionado, hacer clic lo deselecciona
+        // If already selected, clicking again deselects
         if (this.selectedStructureIndex === idx) {
           this.selectStructure(-1);
         } else {
@@ -172,18 +172,18 @@ export class AnatomyExplorerScene {
     if (kickerEl) kickerEl.textContent = 'EXPLORACIÓN ANATÓMICA';
 
     if (st) {
-      // Elemento seleccionado
+      // Selected element
       if (titleEl) titleEl.textContent = st.title;
       if (descEl) descEl.textContent = `${st.fullDesc}`;
     } else {
-      // Ningún elemento seleccionado (vista general)
+      // No element selected (general overview)
       if (titleEl) titleEl.textContent = 'Corte Sagital del Ojo';
       if (descEl) {
         descEl.textContent = 'Toca o haz clic sobre cualquiera de las estructuras señaladas en el ojo (Córnea, Cámara Anterior, Cristalino, Humor Vítreo o Retina) para conocer su función anatómica y su papel en el enfoque de la luz.';
       }
     }
 
-    // Se eliminan los botones selectores por petición del usuario
+    // Selector buttons removed per user requirement
     if (controlsEl) {
       controlsEl.innerHTML = '';
     }
@@ -194,7 +194,7 @@ export class AnatomyExplorerScene {
   }
 
   draw(ctx, width, height) {
-    // 1. Dibuja el corte sagital base
+    // 1. Draw base sagittal section
     this.geometry.drawSagittal(ctx, {
       retinaColor: '#00f2fe',
       retinaGlow: 'rgba(0, 242, 254, 0.4)'
@@ -207,7 +207,7 @@ export class AnatomyExplorerScene {
     const lCenter = this.geometry.lensCenter;
     const rApex = this.geometry.retinaApex;
 
-    // 2. Líneas conectoras sutiles desde los badges a las estructuras anatómicas
+    // 2. Subtle connector lines from badges to anatomical structures
     ctx.save();
     for (let idx = 0; idx < this.structures.length; idx++) {
       const st = this.structures[idx];
@@ -225,7 +225,7 @@ export class AnatomyExplorerScene {
       ctx.strokeStyle = isActive ? '#00f2fe' : 'rgba(56, 189, 248, 0.28)';
       ctx.stroke();
 
-      // Punto diana sobre la estructura
+      // Target dot over anatomical structure
       ctx.setLineDash([]);
       ctx.beginPath();
       ctx.arc(targetX, targetY, (isActive ? 4 : 2.5) * s, 0, Math.PI * 2);
@@ -239,7 +239,7 @@ export class AnatomyExplorerScene {
     }
     ctx.restore();
 
-    // 3. Traza de haces de luz pedagógicos ingresando al ojo
+    // 3. Trace educational light beams entering the eye
     ctx.save();
     const rayOffsets = [-45, -25, 0, 25, 45];
     ctx.lineWidth = 1.8 * s;

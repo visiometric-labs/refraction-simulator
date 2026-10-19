@@ -15,7 +15,7 @@ class App {
     this.engine = new OpticalEngine(this.canvas);
     this.hud = new HudController();
 
-    // Instancias de escenas
+    // Scene instances
     this.macroEyeScene = new MacroEyeScene();
     this.anatomyScene = new AnatomyExplorerScene();
     this.myopiaRefractionScene = new RefractionScene('myopia');
@@ -32,7 +32,7 @@ class App {
   }
 
   init() {
-    // 1. Verificación de Mobile Gate y adaptación tablet
+    // 1. Mobile Gate check and tablet adaptation
     this.checkMobileGate();
     const sceneOverlay = document.getElementById('scene-overlay');
     window.addEventListener('resize', () => {
@@ -42,7 +42,7 @@ class App {
       }
     });
 
-    // 2. Control de colapso/restauración de la tarjeta clínica en tablet
+    // 2. Clinical card collapse/restore control on tablet
     const btnToggleCard = document.getElementById('btn-toggle-card');
     const btnRestoreCard = document.getElementById('btn-restore-card');
 
@@ -56,34 +56,34 @@ class App {
       sceneOverlay?.classList.remove('collapsed');
     });
 
-    // 3. Control de la pantalla de bienvenida / Fullscreen
+    // 3. Welcome screen / Fullscreen control
     const entryGate = document.getElementById('entry-gate');
     const btnStart = document.getElementById('btn-start-experience');
 
     btnStart?.addEventListener('click', async () => {
-      // Intenta activar pantalla completa nativa vía gesto de usuario
+      // Attempts native fullscreen via user gesture
       await requestFullscreen();
 
-      // Cierra la pantalla de bienvenida con fade out
+      // Dismisses welcome screen with fade out
       if (entryGate) {
         entryGate.classList.add('dismissed');
       }
 
-      // Transiciona al primer estado del recorrido
+      // Transitions to first stage of sequence
       stateMachine.transition(States.EYE_HERO);
     });
 
-    // 4. Orquestador de cambio de escenas con transiciones cinemáticas
+    // 4. Scene switcher orchestrator with cinematic transitions
     events.on('state:change', ({ from, to }) => {
       this.handleSceneSwitch(from, to);
     });
 
-    // 5. Pausa de simulación
+    // 5. Simulation pause
     events.on('simulation:pause', (isPaused) => {
       this.engine.setPaused(isPaused);
     });
 
-    // Iniciar bucle a 60 FPS
+    // Start 60 FPS loop
     this.engine.start();
   }
 
@@ -100,15 +100,15 @@ class App {
   }
 
   /**
-   * Gestiona el cambio de escenas con transiciones animadas tanto en el Canvas
-   * como en los overlays de la interfaz.
-   * @param {string} from Estado previo
-   * @param {string} to Estado objetivo
+   * Manages scene switching with animated transitions on both
+   * Canvas and interface overlays.
+   * @param {string} from Previous state
+   * @param {string} to Target state
    */
   handleSceneSwitch(from, to) {
     const sceneOverlay = document.getElementById('scene-overlay');
 
-    // Desactivar simulador de percepción si estaba activo con animación de salida
+    // Deactivate perception simulator if active with exit animation
     if (from === States.MYOPIA_PERCEPTION) {
       this.myopiaPerceptionScene.onExit();
     }
@@ -122,7 +122,7 @@ class App {
       this.presbyopiaPerceptionScene.onExit();
     }
 
-    // Ocultar dock de refracción al entrar a cualquiera de los ejemplos de percepción
+    // Hide refraction dock when entering any perception example
     if (to === States.MYOPIA_PERCEPTION || to === States.HYPEROPIA_PERCEPTION || to === States.ASTIGMATISM_PERCEPTION || to === States.PRESBIOPIA_PERCEPTION) {
       const dockEl = document.getElementById('refraction-dock');
       if (dockEl) {
@@ -131,25 +131,25 @@ class App {
       }
     }
 
-    // Configurar tipo de transición cinemática
+    // Configure cinematic transition type
     let transitionType = 'photon-sweep';
     let duration = 0.85;
 
     if (from === States.EYE_HERO && to === States.ANATOMY) {
-      // Zoom-In cinemático: de la vista frontal macro al interior sagital
+      // Cinematic Zoom-In: from front macro view to sagittal interior
       transitionType = 'zoom-in';
       duration = 0.95;
     } else if (from === States.ANATOMY && to === States.EYE_HERO) {
-      // Zoom-Out cinemático: regreso al macro-ojo
+      // Cinematic Zoom-Out: return to macro eye
       transitionType = 'zoom-out';
       duration = 0.95;
     } else if (from === States.ENTRY) {
-      // Entrada inicial suave
+      // Smooth initial entrance
       transitionType = 'crossfade';
       duration = 0.6;
     }
 
-    // Animar la tarjeta de explicación clínica
+    // Animate clinical explanation card
     this.animateCardChange(() => {
       switch (to) {
         case States.EYE_HERO:
@@ -212,7 +212,7 @@ class App {
   }
 
   /**
-   * Suaviza la actualización de texto y controles en la tarjeta clínica
+   * Smooths text and controls update on clinical card
    * @param {Function} updateFn 
    */
   animateCardChange(updateFn) {
@@ -256,7 +256,7 @@ class App {
   }
 }
 
-// Inicializar la aplicación una vez cargado el DOM
+// Initialize application once DOM is loaded
 window.addEventListener('DOMContentLoaded', () => {
   new App();
 });
