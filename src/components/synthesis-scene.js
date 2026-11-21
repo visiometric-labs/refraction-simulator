@@ -52,6 +52,11 @@ export class SynthesisScene {
               <span>↺ Reiniciar Experiencia Completa</span>
             </button>
           </div>
+          <div class="synthesis-copyright" style="margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--border-subtle); text-align: center; width: 100%;">
+            <span style="font-size: 0.72rem; color: var(--text-tertiary); letter-spacing: 0.03em;">
+              Ocularis &middot; © ${new Date().getFullYear()} Jayzir Martinez &middot; Todos los derechos reservados.
+            </span>
+          </div>
         </div>
       `;
 

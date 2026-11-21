@@ -18,6 +18,7 @@ export class OpticalEngine {
     this.activeScene = null;
     this.isPaused = false;
     this.lastTime = 0;
+    this.time = 0;
     this.animationFrameId = null;
 
     // Cinematic transition system
@@ -28,9 +29,9 @@ export class OpticalEngine {
     this.fromScene = null;
     this.toScene = null;
 
-    // Ambient light particles (suspended photonic dust)
+    // Ambient light particles (suspended photonic dust with ultra smooth motion)
     this.particles = [];
-    this.initParticles(45);
+    this.initParticles(38);
 
     // Bindings
     this._renderLoop = this._renderLoop.bind(this);
@@ -42,7 +43,7 @@ export class OpticalEngine {
   }
 
   /**
-   * Initializes bioluminescent background photonic particles
+   * Initializes bioluminescent background photonic particles with ultra smooth motion
    * @param {number} count 
    */
   initParticles(count) {
@@ -51,11 +52,13 @@ export class OpticalEngine {
       this.particles.push({
         x: Math.random(),
         y: Math.random(),
-        radius: Math.random() * 1.8 + 0.6,
-        speedX: (Math.random() - 0.5) * 0.015,
-        speedY: (Math.random() - 0.5) * 0.015,
-        opacity: Math.random() * 0.4 + 0.1,
-        color: Math.random() > 0.4 ? '#00f2fe' : '#38bdf8'
+        radius: Math.random() * 1.2 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.00035,
+        speedY: (Math.random() - 0.5) * 0.00035,
+        phase: Math.random() * Math.PI * 2,
+        freq: Math.random() * 0.4 + 0.2,
+        opacity: Math.random() * 0.2 + 0.06,
+        color: Math.random() > 0.45 ? '#00f2fe' : '#38bdf8'
       });
     }
   }
@@ -178,6 +181,10 @@ export class OpticalEngine {
     const rawDt = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
     const dt = Math.min(rawDt, 0.1); // clamp delta-time
+
+    if (!this.isPaused) {
+      this.time += dt;
+    }
 
     // 1. Clear background with night gradient
     this._renderBackground();
@@ -353,34 +360,52 @@ export class OpticalEngine {
 
     ctx.fillStyle = bgGrad;
     ctx.fillRect(0, 0, w, h);
+
+    // Marca de agua disimulada integrada en canvas
+    ctx.save();
+    ctx.font = '500 11px "Plus Jakarta Sans", sans-serif';
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.textAlign = 'right';
+    ctx.fillText(`OCULARIS · © ${new Date().getFullYear()} Jayzir Martinez`, w - 24, h - 18);
+    ctx.restore();
   }
 
   /**
-   * Updates and draws suspended photonic particles
+   * Updates and draws suspended photonic particles with ultra smooth atmospheric drift
    * @param {number} dt 
    */
   _renderParticles(dt) {
     const ctx = this.ctx;
     const w = this.width;
     const h = this.height;
+    const time = this.time || 0;
 
     for (const p of this.particles) {
       if (!this.isPaused) {
-        p.x += p.speedX * dt * 60;
-        p.y += p.speedY * dt * 60;
-        if (p.x < 0) p.x = 1;
-        if (p.x > 1) p.x = 0;
-        if (p.y < 0) p.y = 1;
-        if (p.y > 1) p.y = 0;
+        // Deriva suave y orgánica con sutil oscilación sinusoidal
+        const driftX = Math.sin(time * 0.25 * p.freq + p.phase) * 0.00005;
+        const driftY = Math.cos(time * 0.20 * p.freq + p.phase) * 0.00005;
+
+        p.x += (p.speedX + driftX) * dt * 60;
+        p.y += (p.speedY + driftY) * dt * 60;
+
+        // Envoltura suave de bordes con margen para evitar saltos
+        if (p.x < -0.02) p.x = 1.02;
+        if (p.x > 1.02) p.x = -0.02;
+        if (p.y < -0.02) p.y = 1.02;
+        if (p.y > 1.02) p.y = -0.02;
       }
 
       ctx.save();
       ctx.beginPath();
       ctx.arc(p.x * w, p.y * h, p.radius, 0, Math.PI * 2);
       ctx.fillStyle = p.color;
-      ctx.globalAlpha = p.opacity;
+
+      // Respiración sutil de luminosidad
+      const alphaPulse = 1 + Math.sin(time * 0.6 + p.phase) * 0.15;
+      ctx.globalAlpha = Math.max(0.04, Math.min(0.35, p.opacity * alphaPulse));
       ctx.shadowColor = p.color;
-      ctx.shadowBlur = 6;
+      ctx.shadowBlur = 4;
       ctx.fill();
       ctx.restore();
     }

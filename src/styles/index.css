@@ -299,6 +299,14 @@ html, body {
   color: var(--text-tertiary);
 }
 
+.entry-copyright {
+  margin-top: 14px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  letter-spacing: 0.03em;
+  opacity: 0.75;
+}
+
 /* =========================================================
    3. APP HEADER (Discreto & Minimalista)
    ========================================================= */
@@ -435,6 +443,49 @@ html, body {
   height: 100%;
   display: block;
   z-index: 1;
+}
+
+/* Marca de agua médica disimulada y profesional */
+.brand-watermark {
+  position: fixed;
+  bottom: 22px;
+  right: 24px;
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  background: rgba(7, 18, 38, 0.40);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+}
+
+.brand-watermark .watermark-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 6px var(--cyan-primary);
+}
+
+.brand-watermark .watermark-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.brand-watermark .watermark-author {
+  font-weight: 500;
+  color: var(--text-secondary);
 }
 
 .eye-hotspot-container {
