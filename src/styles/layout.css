@@ -260,3 +260,37 @@
   letter-spacing: 0.02em;
 }
 
+
+/* Botón de acción clínica idéntico a Chromatis */
+.btn-clinic-action {
+  border: 1px solid rgba(51, 65, 85, 0.6);
+  background: rgba(15, 23, 42, 0.75);
+  color: #94A3B8;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all var(--transition-smooth);
+  backdrop-filter: blur(8px);
+}
+
+.btn-clinic-action:hover {
+  background-color: rgba(30, 41, 59, 0.9);
+  color: #F8FAFC;
+  border-color: rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-clinic-action.active {
+  background-color: rgba(2, 132, 199, 0.2);
+  color: #38BDF8;
+  border-color: #38BDF8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+

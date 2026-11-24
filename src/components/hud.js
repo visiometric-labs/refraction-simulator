@@ -114,8 +114,16 @@ export class HudController {
   updateFullscreenIcon() {
     const isFs = isFullscreenActive();
     if (this.iconFsEnter && this.iconFsExit) {
-      this.iconFsEnter.style.display = isFs ? 'none' : 'block';
-      this.iconFsExit.style.display = isFs ? 'block' : 'none';
+      this.iconFsEnter.style.display = isFs ? 'none' : 'inline-block';
+      this.iconFsExit.style.display = isFs ? 'inline-block' : 'none';
+    }
+    if (this.btnToggleFs) {
+      this.btnToggleFs.title = isFs ? 'Salir de pantalla completa' : 'Pantalla completa para tablet';
+      if (isFs) {
+        this.btnToggleFs.classList.add('active');
+      } else {
+        this.btnToggleFs.classList.remove('active');
+      }
     }
   }
 }
