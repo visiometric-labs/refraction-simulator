@@ -32,6 +32,12 @@ class App {
   }
 
   init() {
+    // 0. Update copyright year dynamically
+    const currentYear = new Date().getFullYear();
+    document.querySelectorAll('.current-year').forEach(el => {
+      el.textContent = currentYear;
+    });
+
     // 1. Mobile Gate check and tablet adaptation
     this.checkMobileGate();
     const sceneOverlay = document.getElementById('scene-overlay');
