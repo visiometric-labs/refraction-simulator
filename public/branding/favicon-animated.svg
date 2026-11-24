@@ -1,0 +1,48 @@
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+    <defs>
+      <radialGradient id="favIris" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#00f2fe"/>
+        <stop offset="65%" stop-color="#0284c7"/>
+        <stop offset="100%" stop-color="#071b33"/>
+      </radialGradient>
+      <filter id="favGlow">
+        <feGaussianBlur stdDeviation="1.8" result="blur"/>
+        <feMerge>
+          <feMergeNode in="blur"/>
+          <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+      </filter>
+      <style>
+        @keyframes pulseEye {
+          0%, 100% { r: 6.5px; opacity: 1; }
+          50% { r: 7.8px; opacity: 0.85; }
+        }
+        @keyframes glowFlicker {
+          0%, 100% { opacity: 0.9; }
+          50% { opacity: 0.55; }
+        }
+        .pupil-anim { animation: pulseEye 3.6s ease-in-out infinite; }
+        .glow-anim { animation: glowFlicker 3.6s ease-in-out infinite; }
+      </style>
+    </defs>
+    <!-- Fondo redondeado oscuro -->
+    <rect width="64" height="64" rx="14" fill="#030712"/>
+    <rect width="62" height="62" x="1" y="1" rx="13" fill="none" stroke="#00f2fe" stroke-width="1.2" stroke-opacity="0.4"/>
+
+    <!-- Silueta Ocular -->
+    <path d="M 6 32 C 16 17, 48 17, 58 32 C 48 47, 16 47, 6 32 Z"
+          stroke="#00f2fe" stroke-width="2.5" fill="#040e1f" filter="url(#favGlow)" class="glow-anim"/>
+
+    <!-- Iris -->
+    <circle cx="32" cy="32" r="13" fill="url(#favIris)"/>
+
+    <!-- Pupila animada con respiración -->
+    <circle cx="32" cy="32" r="6.5" fill="#020617" class="pupil-anim"/>
+    <circle cx="32" cy="32" r="6.5" fill="none" stroke="#00f2fe" stroke-width="1" opacity="0.6"/>
+
+    <!-- Destellos corneales -->
+    <circle cx="28" cy="27" r="2.2" fill="#ffffff" opacity="0.9"/>
+    <circle cx="35" cy="35" r="1.1" fill="#ffffff" opacity="0.5"/>
+  </svg>
+  

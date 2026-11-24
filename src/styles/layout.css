@@ -1,0 +1,262 @@
+/* =========================================================
+   3. APP HEADER (Discreto & Minimalista)
+   ========================================================= */
+.app-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: linear-gradient(180deg, rgba(3, 7, 18, 0.85) 0%, rgba(3, 7, 18, 0) 100%);
+  pointer-events: none;
+}
+
+.app-header * {
+  pointer-events: auto;
+}
+
+.brand-mini {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand-mini-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 10px var(--cyan-primary);
+}
+
+.brand-mini-text {
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #fff;
+}
+
+.brand-mini-badge {
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: var(--cyan-subtle);
+  background: rgba(2, 132, 199, 0.18);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.module-shortcuts {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(11, 23, 44, 0.65);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border-subtle);
+  padding: 3px;
+  border-radius: var(--radius-full);
+}
+
+.shortcut-pill {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.shortcut-pill:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.shortcut-pill.active {
+  color: #030712;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 12px var(--cyan-glow);
+}
+
+.btn-discrete {
+  background: rgba(11, 23, 44, 0.5);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: var(--transition-smooth);
+}
+
+.btn-discrete:hover {
+  opacity: 1;
+  color: #fff;
+  border-color: var(--border-highlight);
+  background: rgba(11, 23, 44, 0.85);
+  box-shadow: 0 0 14px var(--cyan-glow);
+}
+
+/* =========================================================
+   4. APP VIEWPORT & OPTICAL CANVAS
+   ========================================================= */
+.app-viewport {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 60% 50%, #09172f 0%, #030712 85%);
+}
+
+.optical-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+/* Marca de agua médica disimulada y profesional */
+.brand-watermark {
+  position: fixed;
+  bottom: 22px;
+  right: 24px;
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px;
+  background: rgba(7, 18, 38, 0.40);
+  border: 1px solid rgba(56, 189, 248, 0.12);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.35;
+  transition: opacity 0.3s ease;
+}
+
+.brand-watermark .watermark-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 6px var(--cyan-primary);
+}
+
+.brand-watermark .watermark-text {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+}
+
+.brand-watermark .watermark-author {
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.eye-hotspot-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 20;
+  pointer-events: auto;
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.eye-hotspot-container.hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%) scale(0.85);
+}
+
+.btn-eye-hotspot {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(7, 18, 38, 0.78);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--cyan-primary);
+  border-radius: var(--radius-full);
+  padding: 10px 20px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(0, 242, 254, 0.35);
+  transition: var(--transition-smooth);
+}
+
+.btn-eye-hotspot:hover {
+  transform: scale(1.06);
+  background: rgba(11, 29, 61, 0.92);
+  box-shadow: 0 0 35px rgba(0, 242, 254, 0.6);
+}
+
+.hotspot-pulse-ring {
+  position: absolute;
+  inset: -8px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--cyan-primary);
+  opacity: 0.8;
+  animation: ringPulse 2.4s ease-out infinite;
+}
+
+@keyframes ringPulse {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  100% { transform: scale(1.35); opacity: 0; }
+}
+
+.hotspot-pulse-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--cyan-primary);
+  box-shadow: 0 0 10px var(--cyan-primary);
+}
+
+.hotspot-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  letter-spacing: 0.02em;
+}
+
+.brand-mini-badge-visiometric {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--cyan-subtle);
+  background: rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  border-radius: var(--radius-full);
+  padding: 2px 7px;
+  letter-spacing: 0.02em;
+}
+

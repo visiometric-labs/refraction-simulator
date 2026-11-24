@@ -1,12 +1,23 @@
-# 👁️ Refraction Simulator
+# 👁️ Ocularis — Interactive Refraction & Optical Physics Simulator
+> **by Visiometric Labs • JayzirTech**  
+> *In-Person Clinical Optometric Consultation & Refractive Visual Education Tool*
 
+[![GitHub Pages](https://img.shields.io/badge/Demo-GitHub%20Pages-success?logo=github)](https://visiometric-labs.github.io/refraction-simulator/)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![License](https://img.shields.io/badge/License-Proprietary-blue.svg)]()
 [![JavaScript](https://img.shields.io/badge/Language-Vanilla%20JS%20(ES6+)-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
 [![Vite](https://img.shields.io/badge/Bundler-Vite%206-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
 [![Organization](https://img.shields.io/badge/Org-visiometric--labs-00f2fe)](https://github.com/visiometric-labs)
 
+![Ocularis by Visiometric Labs Banner](./branding/ocularis-whatsapp-preview.jpg)
+
 [**English**](#-english-version) | [**Español**](#-versión-en-español)
+
+---
+
+## 🌐 Live Public Demo
+Access the interactive refraction simulator deployed live:  
+👉 **[https://visiometric-labs.github.io/refraction-simulator/](https://visiometric-labs.github.io/refraction-simulator/)**
 
 ---
 

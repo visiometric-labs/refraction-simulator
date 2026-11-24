@@ -66,6 +66,20 @@ class App {
     const entryGate = document.getElementById('entry-gate');
     const btnStart = document.getElementById('btn-start-experience');
 
+    const openWelcome = () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = null;
+      }
+      if (entryGate) {
+        entryGate.classList.remove('dismissed');
+      }
+      // Restaurar estado limpio para la siguiente consulta
+      stateMachine.reset();
+      sceneOverlay?.classList.remove('collapsed');
+      events.emit('simulation:pause', false);
+    };
+
     btnStart?.addEventListener('click', async () => {
       // Attempts native fullscreen via user gesture
       await requestFullscreen();
@@ -77,14 +91,70 @@ class App {
 
       // Transitions to first stage of sequence
       stateMachine.transition(States.EYE_HERO);
+
+      // Iniciar el temporizador de inactividad de kiosco
+      resetInactivityTimer();
     });
 
-    // 4. Scene switcher orchestrator with cinematic transitions
+    // 4. Temporizador de Inactividad (Modo Kiosk / Gabinete Clínico)
+    // Tras 10 minutos (600.000 ms) sin interacción, regresa automáticamente a la portada/bienvenida
+    const urlTimeoutParam = Number(new URLSearchParams(window.location.search).get('timeout'));
+    let inactivityTimeoutMs = (urlTimeoutParam && urlTimeoutParam > 0) ? urlTimeoutParam : 10 * 60 * 1000;
+    let inactivityTimer = null;
+
+    const resetInactivityTimer = () => {
+      if (inactivityTimer) {
+        clearTimeout(inactivityTimer);
+      }
+
+      // Solo programar si el usuario está dentro de la experiencia (entryGate dismissed)
+      if (entryGate && entryGate.classList.contains('dismissed')) {
+        inactivityTimer = setTimeout(() => {
+          console.log('[Ocularis Kiosk] Inactividad detectada (10m). Regresando a la bienvenida...');
+          openWelcome();
+        }, inactivityTimeoutMs);
+      }
+    };
+
+    // Eventos de interacción del usuario que reinician el temporizador con throttle de 1s
+    const activityEvents = ['pointerdown', 'pointermove', 'keydown', 'wheel', 'touchstart', 'touchmove'];
+    let lastActivityTime = 0;
+    const handleUserActivity = () => {
+      const now = Date.now();
+      if (now - lastActivityTime > 1000) {
+        lastActivityTime = now;
+        resetInactivityTimer();
+      }
+    };
+
+    activityEvents.forEach((evt) => {
+      window.addEventListener(evt, handleUserActivity, { passive: true });
+    });
+
+    // Helpers para testing y depuración rápida en consola
+    window.__setInactivityTimeoutMs = (ms) => {
+      inactivityTimeoutMs = ms;
+      resetInactivityTimer();
+      console.log(`[Ocularis Kiosk] Timeout de inactividad ajustado a ${ms}ms`);
+    };
+    window.__triggerInactivityTimeout = () => {
+      console.log('[Ocularis Kiosk] Disparo manual de inactividad...');
+      openWelcome();
+    };
+
+    // Botón de retorno al inicio desde el mini brand en el header
+    const brandHomeBtn = document.getElementById('btn-brand-home');
+    if (brandHomeBtn) {
+      brandHomeBtn.addEventListener('click', () => openWelcome());
+    }
+
+    // 5. Scene switcher orchestrator with cinematic transitions
     events.on('state:change', ({ from, to }) => {
       this.handleSceneSwitch(from, to);
+      resetInactivityTimer();
     });
 
-    // 5. Simulation pause
+    // 6. Simulation pause
     events.on('simulation:pause', (isPaused) => {
       this.engine.setPaused(isPaused);
     });

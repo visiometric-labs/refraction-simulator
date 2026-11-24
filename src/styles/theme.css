@@ -1,0 +1,62 @@
+/* =========================================================
+   OCULARIS — Design System & Stylesheet
+   Medical-Premium Dark Theme with Bioluminescent Photonic Accents
+   ========================================================= */
+
+:root {
+  /* Color Palette - Deep Medical Dark */
+  --bg-dark-void: #030712;
+  --bg-dark-base: #070f1e;
+  --bg-dark-card: rgba(11, 23, 44, 0.72);
+  --bg-dark-hover: rgba(18, 38, 72, 0.85);
+
+  /* Bioluminescent Accents */
+  --cyan-primary: #00f2fe;
+  --cyan-glow: rgba(0, 242, 254, 0.35);
+  --cyan-subtle: #38bdf8;
+  --blue-clinical: #0284c7;
+
+  /* Optical State Indicators */
+  --optic-corrected: #10b981;
+  --optic-corrected-glow: rgba(16, 185, 129, 0.35);
+  --optic-error: #f59e0b;
+  --optic-error-glow: rgba(245, 158, 11, 0.35);
+  --optic-hyperopia: #a855f7;
+  --optic-hyperopia-glow: rgba(168, 85, 247, 0.35);
+  --optic-astigmatism: #ec4899;
+
+  /* Text & Surfaces */
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --text-tertiary: #64748b;
+  --border-subtle: rgba(56, 189, 248, 0.18);
+  --border-highlight: rgba(0, 242, 254, 0.45);
+  --glass-blur: blur(18px);
+
+  /* Radii & Transitions */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base Reset */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-dark-void);
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

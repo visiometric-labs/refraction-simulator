@@ -1,0 +1,109 @@
+
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+    <defs>
+      <!-- Fondo oscuro de cabina clínica con gradiente radial -->
+      <radialGradient id="ocBg" cx="50%" cy="50%" r="65%">
+        <stop offset="0%" stop-color="#071b33"/>
+        <stop offset="45%" stop-color="#040e1f"/>
+        <stop offset="80%" stop-color="#030712"/>
+        <stop offset="100%" stop-color="#010308"/>
+      </radialGradient>
+
+      <!-- Gradiente del bisel exterior de titanio óptico -->
+      <linearGradient id="rimGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#00f2fe"/>
+        <stop offset="35%" stop-color="#0284c7"/>
+        <stop offset="70%" stop-color="#1e293b"/>
+        <stop offset="100%" stop-color="#38bdf8"/>
+      </linearGradient>
+
+      <!-- Gradiente del Iris Biofotónico -->
+      <radialGradient id="irisGrad" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#ffffff"/>
+        <stop offset="18%" stop-color="#67e8f9"/>
+        <stop offset="40%" stop-color="#00f2fe"/>
+        <stop offset="70%" stop-color="#0284c7"/>
+        <stop offset="92%" stop-color="#034875"/>
+        <stop offset="100%" stop-color="#021c33"/>
+      </radialGradient>
+
+      <!-- Haz de rayos fotónicos convergentes -->
+      <linearGradient id="rayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="#00f2fe" stop-opacity="0.1"/>
+        <stop offset="50%" stop-color="#00f2fe" stop-opacity="0.6"/>
+        <stop offset="100%" stop-color="#ffffff" stop-opacity="0.95"/>
+      </linearGradient>
+
+      <!-- Filtros de resplandor / glow -->
+      <filter id="eyeGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="22" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+
+      <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="8" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+    </defs>
+
+    <!-- Base Circular Oscura -->
+    <rect width="1024" height="1024" fill="url(#ocBg)"/>
+
+    <!-- Anillos de Calibración Óptica (Grados y dioptrías) -->
+    <circle cx="512" cy="512" r="472" fill="none" stroke="url(#rimGrad)" stroke-width="10"/>
+    <circle cx="512" cy="512" r="448" fill="none" stroke="#00f2fe" stroke-width="2.5" stroke-opacity="0.4" stroke-dasharray="8 12"/>
+    <circle cx="512" cy="512" r="424" fill="#030c1c" stroke="#1e293b" stroke-width="3" stroke-opacity="0.6"/>
+
+    <!-- Marcas de transportador / meridiano de astigmatismo (0° a 180°) -->
+    <line x1="90" y1="512" x2="130" y2="512" stroke="#00f2fe" stroke-width="3" opacity="0.6"/>
+    <line x1="894" y1="512" x2="934" y2="512" stroke="#00f2fe" stroke-width="3" opacity="0.6"/>
+    <line x1="512" y1="90" x2="512" y2="130" stroke="#00f2fe" stroke-width="3" opacity="0.6"/>
+    <line x1="512" y1="894" x2="512" y2="934" stroke="#00f2fe" stroke-width="3" opacity="0.6"/>
+
+    <!-- AURA DEL GLOBO OCULAR -->
+    <g filter="url(#eyeGlow)" opacity="0.5">
+      <path d="M 170 512 C 280 300, 744 300, 854 512 C 744 724, 280 724, 170 512 Z" fill="#00f2fe" opacity="0.25"/>
+      <circle cx="512" cy="512" r="190" fill="#0284c7" opacity="0.3"/>
+    </g>
+
+    <!-- ESCLERA Y SILUETA OCULAR PRINCIPAL -->
+    <path d="M 170 512 C 280 300, 744 300, 854 512 C 744 724, 280 724, 170 512 Z"
+          fill="#061224" stroke="url(#rimGrad)" stroke-width="14" stroke-linejoin="round"/>
+
+    <!-- CÓRNEA ANTERIOR ELEVADA (Lente convexa frontal) -->
+    <path d="M 320 512 C 320 370, 430 350, 512 350 C 594 350, 704 370, 704 512" fill="none" stroke="#38bdf8" stroke-width="3" stroke-opacity="0.4" stroke-dasharray="6 8"/>
+
+    <!-- RAYOS FOTÓNICOS GUÍA DE REFRACCIÓN -->
+    <g opacity="0.75" filter="url(#softGlow)">
+      <line x1="160" y1="440" x2="512" y2="512" stroke="url(#rayGrad)" stroke-width="3"/>
+      <line x1="140" y1="512" x2="512" y2="512" stroke="url(#rayGrad)" stroke-width="4"/>
+      <line x1="160" y1="584" x2="512" y2="512" stroke="url(#rayGrad)" stroke-width="3"/>
+    </g>
+
+    <!-- IRIS BIOFOTÓNICO -->
+    <circle cx="512" cy="512" r="182" fill="url(#irisGrad)" filter="url(#softGlow)"/>
+
+    <!-- Fibras del Iris (Estructura radial de alta fidelidad) -->
+    <g stroke="#ffffff" stroke-opacity="0.22" stroke-width="2">
+      <line x1="512" y1="335" x2="512" y2="425"/>
+      <line x1="512" y1="599" x2="512" y2="689"/>
+      <line x1="335" y1="512" x2="425" y2="512"/>
+      <line x1="599" y1="512" x2="689" y2="512"/>
+      <line x1="387" y1="387" x2="451" y2="451"/>
+      <line x1="637" y1="387" x2="573" y2="451"/>
+      <line x1="387" y1="637" x2="451" y2="573"/>
+      <line x1="637" y1="637" x2="573" y2="573"/>
+    </g>
+
+    <!-- PUPILA CENTRAL PROFUNDA -->
+    <circle cx="512" cy="512" r="78" fill="#020617"/>
+    <circle cx="512" cy="512" r="78" fill="none" stroke="#00f2fe" stroke-width="2" stroke-opacity="0.5"/>
+
+    <!-- DESTELLOS CORNEALES QUIRÚRGICOS (Reflexión de luz clínica) -->
+    <ellipse cx="460" cy="455" rx="34" ry="24" transform="rotate(-25 460 455)" fill="#ffffff" opacity="0.95"/>
+    <circle cx="550" cy="545" r="12" fill="#ffffff" opacity="0.6"/>
+
+    <!-- PUNTO FOCAL RETINIANO / FÓVEA -->
+    <circle cx="512" cy="512" r="5" fill="#ffffff" filter="url(#softGlow)"/>
+  </svg>
+  
