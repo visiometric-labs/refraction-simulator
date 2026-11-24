@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  base: command === 'build' ? '/refraction-simulator/' : '/',
   root: '.',
   publicDir: 'public',
   server: {
@@ -13,4 +14,4 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: true
   }
-});
+}));
