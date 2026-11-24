@@ -1,6 +1,6 @@
 import { stateMachine, States } from './core/state-machine.js';
 import { events } from './core/events.js';
-import { isMobileDevice, requestFullscreen } from './core/device-guard.js';
+import { isMobileDevice, requestFullscreen, exitFullscreen, isFullscreenActive } from './core/device-guard.js';
 import { OpticalEngine } from './engine/optical-engine.js';
 import { HudController } from './components/hud.js';
 import { MacroEyeScene } from './components/macro-eye.js';
@@ -65,6 +65,30 @@ class App {
     // 3. Welcome screen / Fullscreen control
     const entryGate = document.getElementById('entry-gate');
     const btnStart = document.getElementById('btn-start-experience');
+    const landingExitFsBtn = document.getElementById('btn-landing-exit-fullscreen');
+
+    const updateLandingFullscreenUI = () => {
+      const isFs = isFullscreenActive();
+      if (landingExitFsBtn) {
+        if (isFs) {
+          landingExitFsBtn.classList.add('visible');
+        } else {
+          landingExitFsBtn.classList.remove('visible');
+        }
+      }
+    };
+
+    if (landingExitFsBtn) {
+      landingExitFsBtn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        await exitFullscreen();
+        updateLandingFullscreenUI();
+      });
+    }
+
+    document.addEventListener('fullscreenchange', updateLandingFullscreenUI);
+    document.addEventListener('webkitfullscreenchange', updateLandingFullscreenUI);
+    updateLandingFullscreenUI();
 
     const openWelcome = () => {
       if (inactivityTimer) {
@@ -78,6 +102,7 @@ class App {
       stateMachine.reset();
       sceneOverlay?.classList.remove('collapsed');
       events.emit('simulation:pause', false);
+      updateLandingFullscreenUI();
     };
 
     btnStart?.addEventListener('click', async () => {
@@ -94,6 +119,7 @@ class App {
 
       // Iniciar el temporizador de inactividad de kiosco
       resetInactivityTimer();
+      updateLandingFullscreenUI();
     });
 
     // 4. Temporizador de Inactividad (Modo Kiosk / Gabinete Clínico)

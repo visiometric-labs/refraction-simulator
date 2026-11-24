@@ -97,6 +97,45 @@
   pointer-events: none;
 }
 
+.entry-header-actions {
+  position: absolute;
+  top: max(20px, env(safe-area-inset-top, 20px));
+  right: max(24px, env(safe-area-inset-right, 24px));
+  z-index: 10001;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  pointer-events: auto;
+}
+
+.btn-exit-fullscreen-landing {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #94a3b8;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(8px);
+}
+
+.btn-exit-fullscreen-landing:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-exit-fullscreen-landing.visible {
+  display: flex;
+}
+
 .entry-backdrop-glow {
   position: absolute;
   width: 600px;
