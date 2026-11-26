@@ -228,48 +228,52 @@
     <div id="anatomy-pills-layer" class="anatomy-pills-layer" style="display: none;"></div>
 
     <!-- Visual Perception Simulator: Before / After Split-Screen (Stages 4, 6, 8, 10) -->
-    <div id="perception-layer" class="perception-layer" style="display: none;">
+    <div id="perception-layer" class="perception-layer">
       <div class="perception-container" id="perception-container">
-        <!-- 1. Right Layer: Corrected vision (Sharp) -->
-        <div class="perception-pane perception-sharp" id="perception-sharp-pane">
-          <canvas id="sharp-canvas" class="perception-canvas"></canvas>
-          <div class="perception-badge badge-sharp">
-            <span class="badge-dot dot-green"></span>
-            <span>Visión Corregida (Lente Oftálmica)</span>
+        <div class="perception-scene" id="perception-scene">
+          <!-- 1. Right Layer: Corrected vision (Sharp) -->
+          <div class="perception-sharp" id="perception-sharp">
+            <canvas id="sharp-canvas" width="900" height="520"></canvas>
+            <div class="perception-tag tag-sharp">Visión Nítida / Corregida</div>
+          </div>
+
+          <!-- 2. Left Layer: Patient vision (Blurred / Astigmatic) -->
+          <div class="perception-blurred-wrapper" id="perception-blurred-wrapper">
+            <div class="perception-blurred" id="perception-blurred">
+              <canvas id="blurred-canvas" width="900" height="520"></canvas>
+              <div class="perception-tag tag-blur" id="perception-blur-tag">Visión del Paciente (Sin Corrección)</div>
+            </div>
+          </div>
+
+          <!-- 3. Central Draggable Split Divider -->
+          <div class="perception-divider" id="perception-divider">
+            <div class="divider-line"></div>
+            <div class="divider-handle">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="9 18 15 12 9 6"/>
+              </svg>
+            </div>
           </div>
         </div>
 
-        <!-- 2. Left Layer: Patient vision (Blurred / Astigmatic) -->
-        <div class="perception-pane perception-blurred" id="perception-blurred-wrapper">
-          <canvas id="blurred-canvas" class="perception-canvas"></canvas>
-          <div class="perception-badge badge-blurred">
-            <span class="badge-dot dot-amber"></span>
-            <span id="perception-blur-tag">Visión del Paciente (Sin Corrección)</span>
-          </div>
+        <div class="perception-instructions">
+          <span>⟵ Arrastra el divisor para comparar la visión del paciente con la visión corregida ⟶</span>
         </div>
 
-        <!-- 3. Central Draggable Split Divider -->
-        <div class="perception-divider" id="perception-divider">
-          <div class="divider-line"></div>
-          <div class="divider-handle">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="15 18 9 12 15 6"/>
-            </svg>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </div>
+        <!-- Button to exit simulation and return to clinical ray tracing -->
+        <div class="dock-action-separator" style="margin-top: 8px;">
+          <button id="btn-exit-simulation" class="btn-goto-simulation btn-exit-simulation" type="button" title="Volver a la explicación clínica y controles del ojo">
+            <span class="btn-sim-content">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="15 18 9 12 15 6"/>
+              </svg>
+              <span id="btn-exit-simulation-text">Volver a la Explicación del Defecto</span>
+            </span>
+          </button>
         </div>
-      </div>
-
-      <!-- Button to exit simulation and return to clinical ray tracing -->
-      <div class="perception-dock-exit">
-        <button id="btn-exit-simulation" class="btn-exit-simulation" type="button">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <polyline points="15 18 9 12 15 6"/>
-          </svg>
-          <span id="btn-exit-simulation-text">Volver a la Explicación del Defecto</span>
-        </button>
       </div>
     </div>
   </main>

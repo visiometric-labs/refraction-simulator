@@ -91,6 +91,7 @@ export class PerceptionSimulator {
     }
 
     if (this.container) {
+      this.container.style.display = 'flex';
       this.container.classList.add('visible');
     }
 
@@ -103,6 +104,7 @@ export class PerceptionSimulator {
   onExit() {
     if (this.container) {
       this.container.classList.remove('visible');
+      this.container.style.display = 'none';
     }
     const btnExit = document.getElementById('btn-exit-simulation');
     if (btnExit && this.boundExitHandler) {
@@ -287,6 +289,12 @@ export class PerceptionSimulator {
    */
   renderTestScenes() {
     if (!this.sharpCanvas || !this.blurredCanvas) return;
+
+    // Ensure coordinate space is always 900x520
+    if (this.sharpCanvas.width !== 900) this.sharpCanvas.width = 900;
+    if (this.sharpCanvas.height !== 520) this.sharpCanvas.height = 520;
+    if (this.blurredCanvas.width !== 900) this.blurredCanvas.width = 900;
+    if (this.blurredCanvas.height !== 520) this.blurredCanvas.height = 520;
 
     const w = this.sharpCanvas.width;
     const h = this.sharpCanvas.height;

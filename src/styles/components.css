@@ -526,6 +526,7 @@
 }
 
 .perception-layer.visible {
+  display: flex !important;
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
